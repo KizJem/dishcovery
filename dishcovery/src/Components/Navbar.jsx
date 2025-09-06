@@ -3,6 +3,12 @@ import { NavLink } from "react-router-dom";
 export default function Navbar() {
   return (
     <>
+      {/* Import Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+
       <header className="nav">
         <div className="nav-inner">
           {/* LEFT */}
@@ -34,6 +40,10 @@ export default function Navbar() {
       </header>
 
       <style>{`
+        * {
+          font-family: 'Poppins', sans-serif;
+        }
+
         .nav {
           position: fixed;
           top: 20px;
