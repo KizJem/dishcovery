@@ -29,54 +29,55 @@ export default function Navbar() {
       </header>
 
       <style>{`
-        /* --- header --- */
         .nav {
           position: fixed;
-          top: 14px;                 /* adds space from the very top */
+          top: 14px;
           left: 0; right: 0;
           background: #FFFFFF;
           z-index: 1000;
-          /* removed box-shadow so there's NO line under the navbar */
         }
 
-        /* --- inner row width & spacing --- */
         .nav-inner {
-          max-width: 1180px;         /* wider = smaller side margins */
+          max-width: 1180px;
           margin: 0 auto;
-          padding: 12px 12px;
-          display: grid;
-          grid-template-columns: 180px 420px 1fr 36px; /* brand | search | links | profile */
-          column-gap: 24px;
+          padding: 12px 16px;
+
+          display: flex;
           align-items: center;
+          gap: 24px;
         }
 
         .brand { font-weight: 800; font-size: 24px; color: #FF9E00; letter-spacing: 0.2px; }
 
         .search {
+          flex: 1; /* expands nicely in the middle */
           display: flex; align-items: center;
           height: 36px; background: #F7F7F7;
           border-radius: 10px; padding: 0 12px;
           border: 1px solid rgba(0,0,0,0.06);
+          max-width: 400px;
         }
         .search-icon { font-size: 13px; color: #6B6B6B; margin-right: 8px; }
         .search input { border: none; outline: none; background: transparent; width: 100%; font-size: 13.5px; color: #222; }
 
-        .links { display: flex; gap: 26px; justify-content: flex-start; }
+        .links { display: flex; gap: 26px; }
         .links a { text-decoration: none; color: #222; font-size: 14px; font-weight: 500; }
         .links a.active { color: #FF9E00; font-weight: 600; }
 
-        .profile { width: 36px; height: 36px; border-radius: 50%; border: none; background: #222; color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+        .profile {
+          width: 36px; height: 36px; border-radius: 50%;
+          border: none; background: #222;
+          display: inline-flex; align-items: center; justify-content: center;
+          cursor: pointer;
+        }
 
-        /* spacer utility: header height (~52) + top offset (14) */
-        .nav-spacer { height: 80px; }
+        .nav-spacer { height: 72px; }
 
         @media (max-width: 980px) {
           .nav-inner {
-            max-width: 100%;
-            grid-template-columns: 160px 1fr 36px;
-            row-gap: 12px;
+            flex-wrap: wrap;
           }
-          .links { grid-column: 1 / -2; }
+          .links { order: 3; width: 100%; justify-content: flex-start; }
         }
       `}</style>
     </>
