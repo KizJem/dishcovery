@@ -1,5 +1,5 @@
-import Navbar from "./Components/Navbar.jsx";
-export default function LandingPage() {
+import Navbar from "../Components/Navbar.jsx";
+export default function Recipe() {
   return (
     <>
       <Navbar />

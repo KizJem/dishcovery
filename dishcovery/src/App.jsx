@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import LandingPage from "./LandingPage.jsx";
-import About from "./About.jsx";
-import Explore from "./Explore.jsx";
-import Recipe from "./Recipe.jsx";
-import Contact from "./Contact.jsx";
+import LandingPage from "./Pages/LandingPage.jsx";
+import About from "./Pages/About.jsx";
+import Explore from "./Pages/Explore.jsx";
+import Recipe from "./Pages/Recipe.jsx";
+import Contact from "./Pages/Contact.jsx";
 
 export default function App() {
   return (
