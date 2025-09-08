@@ -59,7 +59,7 @@ const recipes = [
 
 const styles = {
   container: {
-    padding: "140px 60px 60px", // pushes below navbar
+    padding: "100px 60px 60px", // pushes below navbar
     fontFamily: "Poppins, sans-serif",
   },
   searchWrapper: {
