@@ -37,7 +37,7 @@ export default function Explore() {
                                 key={index}
                                 style={styles.toolButton}
                                 onMouseEnter={(e) => {
-                                    e.target.style.backgroundColor = "#ffe082";
+                                    e.target.style.backgroundColor = "#FF9E00";
                                     e.target.style.transform = "scale(1.05)";
                                 }}
                                 onMouseLeave={(e) => {
