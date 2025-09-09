@@ -62,7 +62,17 @@ export default function Recipe() {
         {/* Recipes Grid */}
         <div style={styles.recipeGrid}>
           {recipes.map((recipe, index) => (
-            <div key={index} style={styles.card}>
+            <div
+              key={index}
+              style={styles.card}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.transition = "transform 0.3s ease";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+            >
               {/* Card Header */}
               <div style={styles.cardHeader}>
                 <h3 style={styles.cardTitle}>{recipe.title}</h3>
@@ -91,7 +101,19 @@ export default function Recipe() {
               </div>
 
               {/* Button */}
-              <button style={styles.seeRecipe}>See Recipe ➝</button>
+              <button
+                style={styles.seeRecipe}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "#FF9E00";
+                  e.target.style.color = "#000";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "#000";
+                  e.target.style.color = "#fff";
+                }}
+              >
+                See Recipe ➝
+              </button>
             </div>
           ))}
         </div>
@@ -149,6 +171,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
+    transition: "transform 0.3s ease", // for smooth zoom
   },
   cardHeader: {
     display: "flex",
@@ -192,5 +215,6 @@ const styles = {
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "500",
+    transition: "all 0.3s ease", // smooth hover
   },
 };

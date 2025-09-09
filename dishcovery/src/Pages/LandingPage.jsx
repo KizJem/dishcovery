@@ -1,12 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
 
 export default function LandingPage() {
+  const navigate = useNavigate(); // hook for navigation
+
   return (
     <>
       <Navbar />
 
-      {/*Hero Section*/}
+      {/* Hero Section */}
       <section style={styles.hero}>
         <div style={styles.heroText}>
           <h1 style={styles.title}>
@@ -17,20 +20,22 @@ export default function LandingPage() {
             the easy way with <b>Dishcovery</b>.
           </p>
           <div style={styles.heroButtons}>
-            <button style={styles.blackBtn}>Explore Recipes</button>
+            {/* Navigate to Recipe page */}
+            <button
+              style={styles.blackBtn}
+              onClick={() => navigate("/recipe")}
+            >
+              Explore Recipes
+            </button>
             <button style={styles.whiteBtn}>Get Our Mobile App ↓</button>
           </div>
         </div>
         <div style={styles.heroImage}>
-          <img
-            src={food}
-            alt="Dish"
-            style={styles.image}
-          />
+          <img src={food} alt="Dish" style={styles.image} />
         </div>
       </section>
 
-      {/*Features Section*/}
+      {/* Features Section */}
       <section style={styles.features}>
         <div style={styles.featureCard}>
           <h3>User-Centered</h3>
