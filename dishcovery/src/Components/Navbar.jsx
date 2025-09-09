@@ -1,52 +1,53 @@
 import { NavLink } from "react-router-dom";
+import { FiSearch } from "react-icons/fi"; // ✅ minimalist professional search icon
 
 export default function Navbar() {
-    return (
-        <>
-            {/* Import Google Fonts */}
-            <link
-                href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-                rel="stylesheet"
-            />
+  return (
+    <>
+      {/* Import Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
 
-            <header className="nav">
-                <div className="nav-inner">
-                    {/* LEFT */}
-                    <div className="brand">Dishcovery</div>
+      <header className="nav">
+        <div className="nav-inner">
+          {/* LEFT */}
+          <div className="brand">Dishcovery</div>
 
-                    {/* MIDDLE */}
-                    <form className="search" onSubmit={(e) => e.preventDefault()}>
-                        <span className="search-icon" aria-hidden>🔍</span>
-                        <input type="text" placeholder="Search.." />
-                    </form>
+          {/* MIDDLE */}
+          <form className="search" onSubmit={(e) => e.preventDefault()}>
+            <FiSearch className="search-icon" /> {/* replaced 🔍 */}
+            <input type="text" placeholder="Search.." />
+          </form>
 
-                    {/* RIGHT */}
-                    <div className="right-section">
-                        <nav className="links">
-                            <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
-                            <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
-                            <NavLink to="/explore" className={({ isActive }) => isActive ? "active" : ""}>Explore</NavLink>
-                            <NavLink to="/recipe" className={({ isActive }) => isActive ? "active" : ""}>Recipe</NavLink>
-                            <NavLink to="/contact" className={({ isActive }) => isActive ? "active" : ""}>Contact</NavLink>
-                        </nav>
+          {/* RIGHT */}
+          <div className="right-section">
+            <nav className="links">
+              <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
+              <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+              <NavLink to="/explore" className={({ isActive }) => isActive ? "active" : ""}>Explore</NavLink>
+              <NavLink to="/recipe" className={({ isActive }) => isActive ? "active" : ""}>Recipe</NavLink>
+              <NavLink to="/contact" className={({ isActive }) => isActive ? "active" : ""}>Contact</NavLink>
+            </nav>
 
-                        <button className="profile" aria-label="Profile">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 12a5 5 0 1 0-0.001-10.001A5 5 0 0 0 12 12Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" fill="#FF9E00" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </header>
+            <button className="profile" aria-label="Profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12a5 5 0 1 0-0.001-10.001A5 5 0 0 0 12 12Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" fill="#FF9E00" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
 
-            <style>{`
+      <style>{`
         * {
           font-family: 'Poppins', sans-serif;
         }
 
         .nav {
           position: fixed;
-          top: 0;          /* stick to very top */
+          top: 0;
           left: 0;
           right: 0;
           background-color: #ffffff;
@@ -84,7 +85,7 @@ export default function Navbar() {
         }
 
         .search-icon { 
-          font-size: 16px; 
+          font-size: 18px; 
           color: #6B6B6B; 
           margin-right: 10px; 
         }
@@ -135,7 +136,7 @@ export default function Navbar() {
         }
 
         .nav-spacer { 
-          height: 84px;   /* add this in LandingPage to avoid overlap */
+          height: 84px;  
         }
 
         @media (max-width: 980px) {
@@ -157,6 +158,6 @@ export default function Navbar() {
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
