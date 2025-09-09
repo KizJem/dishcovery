@@ -70,7 +70,19 @@ export default function Explore() {
                                 <img src={food} alt={category} style={styles.cardImage} />
                                 <div style={styles.cardContent}>
                                     <h3 style={styles.cardTitle}>{category}</h3>
-                                    <button style={styles.cardButton}>See Recipe →</button>
+                                    <button
+                                        style={styles.cardButton}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.background = "#FF9E00";
+                                            e.target.style.color = "#000";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.background = "#000";
+                                            e.target.style.color = "#fff";
+                                        }}
+                                    >
+                                        See Recipe →
+                                    </button>
                                 </div>
                             </div>
                         ))}
@@ -156,6 +168,6 @@ const styles = {
         borderRadius: "25px",
         fontSize: "14px",
         cursor: "pointer",
-        transition: "background 0.3s",
+        transition: "all 0.3s ease",
     },
 };

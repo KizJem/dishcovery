@@ -1,24 +1,36 @@
 import { useState } from "react";
 import Navbar from "../Components/Navbar";
-import { FaHeart, FaRegHeart, FaThLarge } from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegHeart,
+  FaThLarge,
+  FaCarrot,
+  FaUtensils,
+  FaIceCream,
+  FaGlassMartiniAlt,
+  FaLeaf,
+  FaSeedling,
+  FaAppleAlt,
+} from "react-icons/fa";
 import food from "../Images/food.png"; // sample recipe image
 
 export default function Recipe() {
-  const [liked, setLiked] = useState({}); // store liked states per card
+  const [liked, setLiked] = useState({});
+  const [activeCategory, setActiveCategory] = useState("All Recipes");
 
   const toggleLike = (id) => {
     setLiked((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const categories = [
-    "All Recipes",
-    "Appetizers",
-    "Main Dishes",
-    "Desserts",
-    "Drinks",
-    "Vegetarian",
-    "Vegan",
-    "Healthy",
+    { name: "All Recipes", icon: <FaThLarge /> },
+    { name: "Appetizers", icon: <FaCarrot /> },
+    { name: "Main Dishes", icon: <FaUtensils /> },
+    { name: "Desserts", icon: <FaIceCream /> },
+    { name: "Drinks", icon: <FaGlassMartiniAlt /> },
+    { name: "Vegetarian", icon: <FaLeaf /> },
+    { name: "Vegan", icon: <FaSeedling /> },
+    { name: "Healthy", icon: <FaAppleAlt /> },
   ];
 
   const recipes = Array(10).fill({
@@ -43,18 +55,22 @@ export default function Recipe() {
           {categories.map((cat, index) => (
             <button
               key={index}
+              onClick={() => setActiveCategory(cat.name)}
               style={{
                 ...styles.categoryButton,
-                ...(index === 0 ? styles.activeCategory : {}),
+                ...(activeCategory === cat.name ? styles.activeCategory : {}),
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
               }}
             >
-              <FaThLarge
-                style={{
-                  marginRight: "8px",
-                  color: "#FF9E00", // make icons yellow
-                }}
-              />
-              {cat}
+              <span style={{ marginRight: "8px", color: "#FF9E00" }}>
+                {cat.icon}
+              </span>
+              {cat.name}
             </button>
           ))}
         </div>
@@ -153,6 +169,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "500",
+    transition: "transform 0.2s ease",
   },
   activeCategory: {
     background: "#000",
@@ -171,7 +188,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "10px",
-    transition: "transform 0.3s ease", // for smooth zoom
+    transition: "transform 0.3s ease",
   },
   cardHeader: {
     display: "flex",
@@ -215,6 +232,6 @@ const styles = {
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "500",
-    transition: "all 0.3s ease", // smooth hover
+    transition: "all 0.3s ease",
   },
 };
