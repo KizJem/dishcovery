@@ -23,11 +23,36 @@ export default function LandingPage() {
             {/* Navigate to Recipe page */}
             <button
               style={styles.blackBtn}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.1)";
+                e.currentTarget.style.background = "#FF9E00";
+                e.currentTarget.style.color = "#000";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.background = "#000";
+                e.currentTarget.style.color = "#fff";
+              }}
               onClick={() => navigate("/recipe")}
             >
               Explore Recipes
             </button>
-            <button style={styles.whiteBtn}>Get Our Mobile App ↓</button>
+
+            <button
+              style={styles.whiteBtn}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.1)";
+                e.currentTarget.style.background = "#000";
+                e.currentTarget.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.background = "#fff";
+                e.currentTarget.style.color = "#000";
+              }}
+            >
+              Get Our Mobile App ↓
+            </button>
           </div>
         </div>
         <div style={styles.heroImage}>
@@ -105,6 +130,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     fontWeight: "500",
+    transition: "all 0.3s ease", // ✅ smooth hover
   },
   whiteBtn: {
     background: "#fff",
@@ -115,6 +141,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     fontWeight: "500",
+    transition: "all 0.3s ease", // ✅ smooth hover
   },
   heroImage: {
     flex: 1,
