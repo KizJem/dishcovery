@@ -11,7 +11,7 @@ export function SiteNavbar() {
     <header style={styles.navbar}>
       <div style={styles.navInner}>
         {/* Brand */}
-        <div style={styles.brand}>Dishcovery</div>
+        <div style={styles.brand}>Dishecovery</div>
 
         {/* Search */}
         <form style={styles.search} onSubmit={(e) => e.preventDefault()}>
@@ -72,31 +72,6 @@ export default function LandingPage() {
         </div>
         <div style={styles.heroImage}>
           <img src={food} alt="Dish" style={styles.image} />
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section style={styles.features}>
-        <div style={styles.featureCard}>
-          <h3>User-Centered</h3>
-          <p>
-            Your feedback shapes our platform, ensuring a seamless and
-            satisfying culinary journey.
-          </p>
-        </div>
-        <div style={styles.featureCard}>
-          <h3>Diverse Recipes</h3>
-          <p>
-            We celebrate diverse culinary traditions from around the world,
-            inspiring you today.
-          </p>
-        </div>
-        <div style={styles.featureCard}>
-          <h3>Fun Community</h3>
-          <p>
-            We foster a vibrant foodie community where joy comes with sharing
-            recipes with us.
-          </p>
         </div>
       </section>
 
@@ -221,20 +196,4 @@ const styles = {
     paddingTop: 15,
   },
   image: { width: "100%", maxHeight: 600, objectFit: "cover" },
-  features: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-    gap: 20,
-    padding: "60px 80px",
-    background: "#f5f5f5",
-    ...baseFont,
-  },
-  featureCard: {
-    background: "#fff",
-    borderRadius: 16,
-    padding: 20,
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-    textAlign: "center",
-    ...baseFont,
-  },
 };
