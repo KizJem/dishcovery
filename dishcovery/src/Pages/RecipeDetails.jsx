@@ -1,0 +1,473 @@
+// src/Pages/RecipeDetails.jsx
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "../Components/Navbar";
+import {
+  FaUtensils,
+  FaClock,
+  FaFireAlt,
+  FaHatCowboy,
+  FaChevronLeft,
+  FaDownload,
+  FaHeart,
+} from "react-icons/fa";
+import food from "../Images/food.png"; // fallback image
+
+const styles = {
+  page: { padding: "80px 80px", fontFamily: "Poppins, sans-serif" },
+  backBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "10px 14px",
+    borderRadius: 999,
+    border: "1px solid #eee",
+    background: "#fff",
+    cursor: "pointer",
+    marginBottom: 16,
+  },
+  heroWrap: {
+    position: "relative",
+    borderRadius: 16,
+    overflow: "hidden",
+    height: 260,
+    marginBottom: 24,
+  },
+  heroImg: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    display: "block",
+  },
+  heroOverlay: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.45) 60%, rgba(0,0,0,0.55) 100%)",
+  },
+  titleBlock: {
+    position: "absolute",
+    left: 20,
+    bottom: 18,
+    color: "#fff",
+  },
+  title: { fontSize: 36, lineHeight: 1.1, margin: 0, fontWeight: 700 },
+  highlight: { color: "#FF9E00" },
+
+  metaRow: {
+    display: "grid",
+    gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+    gap: 14,
+    marginBottom: 18,
+  },
+  metaCard: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "14px 16px",
+    borderRadius: 14,
+    background: "#fff",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+  },
+
+  mainGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0,1fr) 340px",
+    gap: 24,
+  },
+
+  pillRow: { display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 },
+  pill: {
+    padding: "6px 12px",
+    background: "#FFF3E1",
+    borderRadius: 999,
+    fontSize: 12,
+    color: "#FF9E00",
+  },
+
+  sectionCard: {
+    background: "#fff",
+    borderRadius: 16,
+    padding: 20,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+  },
+  h3: { margin: "0 0 14px 0", fontSize: 18 },
+
+  // Ingredients
+  ingGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, minmax(0,1fr))",
+    gap: 8,
+  },
+  ingItem: {
+    padding: "8px 10px",
+    borderRadius: 10,
+    background: "#FAFAFA",
+    border: "1px solid #F0F0F0",
+    fontSize: 14,
+  },
+
+  // Instructions
+  step: {
+    display: "flex",
+    gap: 10,
+    padding: "10px 12px",
+    borderRadius: 12,
+    background: "#FAFAFA",
+    border: "1px solid #EFEFEF",
+    alignItems: "flex-start",
+  },
+  stepNum: {
+    minWidth: 28,
+    height: 28,
+    borderRadius: 8,
+    background: "#FF9E00",
+    color: "#000",
+    fontWeight: 700,
+    display: "grid",
+    placeItems: "center",
+    marginTop: 2,
+  },
+
+  // Sidebar: Nutrition
+  sideCard: {
+    background: "#fff",
+    borderRadius: 16,
+    padding: 18,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+    position: "sticky",
+    top: 90,
+    alignSelf: "start",
+  },
+  barRow: { display: "grid", gridTemplateColumns: "120px 1fr auto", gap: 10, alignItems: "center", margin: "6px 0" },
+  barTrack: { height: 8, borderRadius: 6, background: "#F0F0F0", overflow: "hidden" },
+  barFill: (w) => ({ width: `${w}%`, height: "100%", background: "#FF9E00" }),
+
+  // Buttons
+  dlBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    padding: "10px 16px",
+    borderRadius: 999,
+    border: "none",
+    background: "#000",
+    color: "#fff",
+    cursor: "pointer",
+    margin: "10px 0 18px",
+  },
+
+  // Skeleton
+  skel: {
+    background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
+    backgroundSize: "400% 100%",
+    animation: "shimmer 1.4s ease infinite",
+  },
+};
+
+function useRecipeDetails(id) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    const key = import.meta.env.VITE_SPOONACULAR_KEY;
+    if (!key) {
+      setErr("Missing Spoonacular API key in .env.local");
+      setLoading(false);
+      return;
+    }
+    const controller = new AbortController();
+
+    (async () => {
+      try {
+        setLoading(true);
+        setErr("");
+        const url = new URL(`https://api.spoonacular.com/recipes/${id}/information`);
+        url.searchParams.set("apiKey", key);
+        url.searchParams.set("includeNutrition", "true");
+        const res = await fetch(url.toString(), { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        setData(json);
+      } catch (e) {
+        if (e.name !== "AbortError") setErr("Failed to load recipe.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [id]);
+
+  return { data, loading, err };
+}
+
+function formatMinutes(mins) {
+  if (!mins && mins !== 0) return "-";
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h && m) return `${h}h ${m}m`;
+  if (h) return `${h}h`;
+  return `${m}m`;
+}
+
+export default function RecipeDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data, loading, err } = useRecipeDetails(id);
+
+  // nutrition helpers
+  const get = (name) =>
+    data?.nutrition?.nutrients?.find((n) => n.name?.toLowerCase() === name.toLowerCase());
+  const calories = get("Calories")?.amount ?? null;
+
+  const macroBars = useMemo(() => {
+    const p = get("Protein")?.amount ?? 0;
+    const c = get("Carbohydrates")?.amount ?? 0;
+    const f = get("Fat")?.amount ?? 0;
+    const total = p + c + f || 1;
+    return [
+      { label: "Protein", value: `${Math.round(p)} g`, pct: Math.min(100, (p / total) * 100) },
+      { label: "Carbs", value: `${Math.round(c)} g`, pct: Math.min(100, (c / total) * 100) },
+      { label: "Fat", value: `${Math.round(f)} g`, pct: Math.min(100, (f / total) * 100) },
+    ];
+  }, [data]);
+
+  const micronutrients = [
+    "Sugar",
+    "Sodium",
+    "Potassium",
+    "Vitamin A",
+    "Vitamin C",
+    "Iron",
+  ].map((n) => {
+    const item = get(n);
+    return { label: n, value: item ? `${Math.round(item.amount)} ${item.unit}` : "—", pct: 70 };
+  });
+
+  // instructions
+  const steps =
+    data?.analyzedInstructions?.[0]?.steps?.map((s) => s.step)?.filter(Boolean) ??
+    (data?.instructions
+      ? data.instructions
+          .replace(/<\/?ol>|<\/?ul>|<\/?li>/g, " ")
+          .split(/\d+\.\s|(?:Step\s*\d+:)/i)
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : []);
+
+  // tags
+  const tagList = [
+    ...(data?.dishTypes || []),
+    ...(data?.diets || []),
+    ...(data?.cuisines || []),
+  ];
+
+  // shimmer keyframes once
+  useEffect(() => {
+    const id = "shimmer-anim";
+    if (!document.getElementById(id)) {
+      const el = document.createElement("style");
+      el.id = id;
+      el.innerHTML = `
+        @keyframes shimmer {
+          0% { background-position: 100% 0; }
+          100% { background-position: 0 0; }
+        }`;
+      document.head.appendChild(el);
+    }
+  }, []);
+
+  return (
+    <>
+      <Navbar />
+      <section style={styles.page}>
+        <button style={styles.backBtn} onClick={() => navigate(-1)}>
+          <FaChevronLeft /> Back
+        </button>
+
+        {/* HERO */}
+        <div style={styles.heroWrap}>
+          {loading ? (
+            <div style={{ ...styles.heroImg, ...styles.skel }} />
+          ) : (
+            <img
+              src={data?.image || food}
+              alt={data?.title || "Recipe image"}
+              style={styles.heroImg}
+            />
+          )}
+          <div style={styles.heroOverlay} />
+          <div style={styles.titleBlock}>
+            <h1 style={styles.title}>
+              {loading ? (
+                <span style={{ ...styles.skel, width: 240, height: 30, display: "inline-block", borderRadius: 8 }} />
+              ) : (
+                <>
+                  {data?.title?.split(" ").slice(0, -1).join(" ") || "Recipe"}{" "}
+                  <span style={styles.highlight}>
+                    {data?.title?.split(" ").slice(-1)[0] || ""}
+                  </span>
+                </>
+              )}
+            </h1>
+          </div>
+          {/* Like icon, mimic screenshot */}
+          <div style={{ position: "absolute", right: 16, top: 16 }}>
+            <div
+              title="Add to favorites"
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: "50%",
+                background: "#fff",
+                display: "grid",
+                placeItems: "center",
+                boxShadow: "0 2px 6px rgba(0,0,0,.15)",
+                cursor: "pointer",
+              }}
+            >
+              <FaHeart color="#FF9E00" />
+            </div>
+          </div>
+        </div>
+
+        {/* META */}
+        <div style={styles.metaRow}>
+          <div style={styles.metaCard}>
+            <FaUtensils color="#FF9E00" />{" "}
+            <div>
+              <div style={{ fontSize: 12, color: "#777" }}>Cuisine</div>
+              <div style={{ fontWeight: 600 }}>{data?.cuisines?.[0] || "—"}</div>
+            </div>
+          </div>
+          <div style={styles.metaCard}>
+            <FaHatCowboy color="#FF9E00" />{" "}
+            <div>
+              <div style={{ fontSize: 12, color: "#777" }}>Servings</div>
+              <div style={{ fontWeight: 600 }}>{data?.servings ?? "—"}</div>
+            </div>
+          </div>
+          <div style={styles.metaCard}>
+            <FaClock color="#FF9E00" />{" "}
+            <div>
+              <div style={{ fontSize: 12, color: "#777" }}>Prep Time</div>
+              <div style={{ fontWeight: 600 }}>
+                {formatMinutes(data?.preparationMinutes)}
+              </div>
+            </div>
+          </div>
+          <div style={styles.metaCard}>
+            <FaClock color="#FF9E00" />{" "}
+            <div>
+              <div style={{ fontSize: 12, color: "#777" }}>Cook Time</div>
+              <div style={{ fontWeight: 600 }}>
+                {formatMinutes(data?.cookingMinutes)}
+              </div>
+            </div>
+          </div>
+          <div style={styles.metaCard}>
+            <FaFireAlt color="#FF9E00" />{" "}
+            <div>
+              <div style={{ fontSize: 12, color: "#777" }}>Difficulty</div>
+              <div style={{ fontWeight: 600 }}>
+                {data?.readyInMinutes ? (data.readyInMinutes > 45 ? "Intermediate" : "Easy") : "—"}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* TAGS + DOWNLOAD */}
+        <div style={styles.pillRow}>
+          {tagList.slice(0, 12).map((t, i) => (
+            <span key={i} style={styles.pill}>{t}</span>
+          ))}
+        </div>
+        <button
+          style={styles.dlBtn}
+          onClick={() => window.print()} // simple print-to-PDF
+          title="Download Recipe PDF"
+        >
+          <FaDownload /> Download Recipe PDF
+        </button>
+
+        {/* MAIN GRID */}
+        <div style={styles.mainGrid}>
+          <div style={{ display: "grid", gap: 18 }}>
+            {/* INGREDIENTS */}
+            <div style={styles.sectionCard}>
+              <h3 style={styles.h3}>Ingredients</h3>
+              {loading ? (
+                <div style={{ ...styles.skel, height: 140, borderRadius: 12 }} />
+              ) : (
+                <div style={styles.ingGrid}>
+                  {(data?.extendedIngredients || []).map((ing) => (
+                    <div key={ing.id || ing.original} style={styles.ingItem}>
+                      {ing.original}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* INSTRUCTIONS */}
+            <div style={styles.sectionCard}>
+              <h3 style={styles.h3}>Cooking Instructions</h3>
+              {loading ? (
+                <div style={{ ...styles.skel, height: 220, borderRadius: 12 }} />
+              ) : steps.length ? (
+                <div style={{ display: "grid", gap: 10 }}>
+                  {steps.map((s, i) => (
+                    <div key={i} style={styles.step}>
+                      <div style={styles.stepNum}>{i + 1}</div>
+                      <div style={{ fontSize: 14, lineHeight: 1.5 }}>{s}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ color: "#777" }}>No instructions available.</div>
+              )}
+            </div>
+          </div>
+
+          {/* SIDEBAR */}
+          <aside style={styles.sideCard}>
+            <h3 style={{ ...styles.h3, marginBottom: 6 }}>Nutritional Info</h3>
+            <div style={{ color: "#777", fontSize: 13, marginBottom: 10 }}>
+              {calories ? `${Math.round(calories)} kcal` : "—"}
+            </div>
+
+            {/* Macro bars */}
+            {macroBars.map((m) => (
+              <div key={m.label} style={styles.barRow}>
+                <div style={{ fontSize: 13 }}>{m.label}</div>
+                <div style={styles.barTrack}>
+                  <div style={styles.barFill(m.pct)} />
+                </div>
+                <div style={{ fontSize: 12, color: "#555" }}>{m.value}</div>
+              </div>
+            ))}
+
+            <div style={{ height: 10 }} />
+
+            {/* Selected micro list */}
+            {micronutrients.map((n) => (
+              <div key={n.label} style={styles.barRow}>
+                <div style={{ fontSize: 13 }}>{n.label}</div>
+                <div style={styles.barTrack}>
+                  <div style={styles.barFill(n.pct)} />
+                </div>
+                <div style={{ fontSize: 12, color: "#555" }}>{n.value}</div>
+              </div>
+            ))}
+
+            {err && (
+              <div style={{ marginTop: 12, color: "#b00020", fontSize: 13 }}>{err}</div>
+            )}
+          </aside>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,5 +1,6 @@
 // src/Pages/Recipe.jsx
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import {
   FaHeart,
@@ -72,7 +73,12 @@ const styles = {
     alignItems: "flex-start",
     gap: "8px",
   },
-  heartButton: { background: "none", border: "none", cursor: "pointer", flexShrink: 0 },
+  heartButton: {
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    flexShrink: 0,
+  },
 
   // ✅ Uniform title area (2 lines, fixed height ~44–48px)
   titleClamp: {
@@ -97,8 +103,13 @@ const styles = {
     display: "block",
   },
 
-  // Tags (give small min height so empty vs 1–2 tags doesn't shift cards)
-  tags: { display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "28px" },
+  // Tags
+  tags: {
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+    minHeight: "28px",
+  },
   tag: {
     background: "#f5f5f5",
     padding: "4px 10px",
@@ -124,7 +135,8 @@ const styles = {
     width: "100%",
     height: "180px",
     borderRadius: "12px",
-    background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
+    background:
+      "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
     backgroundSize: "400% 100%",
     animation: "shimmer 1.4s ease infinite",
   },
@@ -150,6 +162,7 @@ export default function Recipe() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => injectKeyframes(), []);
 
@@ -164,17 +177,25 @@ export default function Recipe() {
     { name: "Healthy", icon: <FaAppleAlt /> },
   ];
 
-  const toggleLike = (id) => setLiked((p) => ({ ...p, [id]: !p[id] }));
+  const toggleLike = (id) =>
+    setLiked((p) => ({ ...p, [id]: !p[id] }));
 
   const apiParams = useMemo(() => {
     switch (activeCategory) {
-      case "Appetizers": return { type: "appetizer" };
-      case "Main Dishes": return { type: "main course" };
-      case "Desserts": return { type: "dessert" };
-      case "Drinks": return { type: "beverage" };
-      case "Vegetarian": return { diet: "vegetarian" };
-      case "Vegan": return { diet: "vegan" };
-      default: return {};
+      case "Appetizers":
+        return { type: "appetizer" };
+      case "Main Dishes":
+        return { type: "main course" };
+      case "Desserts":
+        return { type: "dessert" };
+      case "Drinks":
+        return { type: "beverage" };
+      case "Vegetarian":
+        return { diet: "vegetarian" };
+      case "Vegan":
+        return { diet: "vegan" };
+      default:
+        return {};
     }
   }, [activeCategory]);
 
@@ -190,27 +211,36 @@ export default function Recipe() {
       setLoading(true);
       setError("");
       try {
-        const base = new URL("https://api.spoonacular.com/recipes/complexSearch");
+        const base = new URL(
+          "https://api.spoonacular.com/recipes/complexSearch"
+        );
         base.searchParams.set("apiKey", key);
         base.searchParams.set("number", "24");
         base.searchParams.set("addRecipeInformation", "true");
         base.searchParams.set("instructionsRequired", "true");
         base.searchParams.set("sort", "random");
         base.searchParams.set("imageType", "jpg");
-        if (apiParams.type) base.searchParams.set("type", apiParams.type);
-        if (apiParams.diet) base.searchParams.set("diet", apiParams.diet);
+        if (apiParams.type)
+          base.searchParams.set("type", apiParams.type);
+        if (apiParams.diet)
+          base.searchParams.set("diet", apiParams.diet);
 
-        const res = await fetch(base.toString(), { signal: controller.signal });
+        const res = await fetch(base.toString(), {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
         let results = data?.results ?? [];
         if (activeCategory === "Healthy") {
-          results = results.filter((r) => r.veryHealthy || r.healthScore >= 60);
+          results = results.filter(
+            (r) => r.veryHealthy || r.healthScore >= 60
+          );
         }
         setItems(results);
       } catch (e) {
-        if (e.name !== "AbortError") setError("Failed to load recipes.");
+        if (e.name !== "AbortError")
+          setError("Failed to load recipes.");
       } finally {
         setLoading(false);
       }
@@ -224,7 +254,8 @@ export default function Recipe() {
     const tags = [];
     if (Array.isArray(r.diets)) {
       if (r.diets.includes("vegan")) tags.push("Vegan");
-      if (r.diets.some((d) => d.includes("vegetarian"))) tags.push("Vegetarian");
+      if (r.diets.some((d) => d.includes("vegetarian")))
+        tags.push("Vegetarian");
     }
     if (r.veryHealthy || r.healthScore >= 60) tags.push("Healthy");
     if (r.readyInMinutes <= 30) tags.push("Quick");
@@ -247,19 +278,36 @@ export default function Recipe() {
               onClick={() => setActiveCategory(cat.name)}
               style={{
                 ...styles.categoryButton,
-                ...(activeCategory === cat.name ? styles.activeCategory : {}),
+                ...(activeCategory === cat.name
+                  ? styles.activeCategory
+                  : {}),
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.transform = "scale(1.1)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
-              <span style={{ marginRight: "8px", color: "#FF9E00" }}>{cat.icon}</span>
+              <span
+                style={{ marginRight: "8px", color: "#FF9E00" }}
+              >
+                {cat.icon}
+              </span>
               {cat.name}
             </button>
           ))}
         </div>
 
         {error && (
-          <p style={{ textAlign: "center", color: "#b00020", marginTop: "-20px", marginBottom: "20px" }}>
+          <p
+            style={{
+              textAlign: "center",
+              color: "#b00020",
+              marginTop: "-20px",
+              marginBottom: "20px",
+            }}
+          >
             {error}
           </p>
         )}
@@ -270,15 +318,31 @@ export default function Recipe() {
             ? Array.from({ length: 10 }).map((_, i) => (
                 <div key={`skel-${i}`} style={styles.card}>
                   <div style={styles.cardHeader}>
-                    <div style={{ width: 170, height: 16, background: "#eee", borderRadius: 6 }} />
-                    <span style={{ width: 18, height: 18, background: "#eee", borderRadius: "50%" }} />
+                    <div
+                      style={{
+                        width: 170,
+                        height: 16,
+                        background: "#eee",
+                        borderRadius: 6,
+                      }}
+                    />
+                    <span
+                      style={{
+                        width: 18,
+                        height: 18,
+                        background: "#eee",
+                        borderRadius: "50%",
+                      }}
+                    />
                   </div>
                   <div style={styles.skelImg} />
                   <div style={styles.tags}>
                     <span style={styles.tag}> </span>
                     <span style={styles.tag}> </span>
                   </div>
-                  <button style={styles.seeRecipe} disabled>See Recipe →</button>
+                  <button style={styles.seeRecipe} disabled>
+                    See Recipe →
+                  </button>
                 </div>
               ))
             : items.map((r) => {
@@ -292,21 +356,38 @@ export default function Recipe() {
                     key={id}
                     style={styles.card}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.05)";
-                      e.currentTarget.style.transition = "transform 0.3s ease";
+                      e.currentTarget.style.transform =
+                        "scale(1.05)";
+                      e.currentTarget.style.transition =
+                        "transform 0.3s ease";
                     }}
-                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
                   >
                     {/* Header with clamped title */}
                     <div style={styles.cardHeader}>
                       <h3 style={styles.titleClamp}>{title}</h3>
-                      <button onClick={() => toggleLike(id)} style={styles.heartButton} aria-label="like">
-                        {liked[id] ? <FaHeart color="red" size={18} /> : <FaRegHeart size={18} />}
+                      <button
+                        onClick={() => toggleLike(id)}
+                        style={styles.heartButton}
+                        aria-label="like"
+                      >
+                        {liked[id] ? (
+                          <FaHeart color="red" size={18} />
+                        ) : (
+                          <FaRegHeart size={18} />
+                        )}
                       </button>
                     </div>
 
                     {/* Image */}
-                    <img src={img} alt={title} style={styles.cardImg} loading="lazy" />
+                    <img
+                      src={img}
+                      alt={title}
+                      style={styles.cardImg}
+                      loading="lazy"
+                    />
 
                     {/* Tags */}
                     <div style={styles.tags}>
@@ -328,9 +409,7 @@ export default function Recipe() {
                         e.target.style.background = "#000";
                         e.target.style.color = "#fff";
                       }}
-                      onClick={() => {
-                        // TODO: navigate(`/recipe/${id}`)
-                      }}
+                      onClick={() => navigate(`/recipe/${id}`)}
                     >
                       See Recipe ➝
                     </button>
