@@ -1,6 +1,7 @@
+// src/Pages/LandingPage.jsx
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { FaSearch, FaUser } from "react-icons/fa"; // ⬅️ FaUser (not FaUserCircle)
+import { FaSearch, FaUser } from "react-icons/fa"; // FaUser (not FaUserCircle)
 import food from "../Images/food.png";
 import Contact from "./Contact";
 
@@ -10,7 +11,7 @@ export function SiteNavbar() {
     <header style={styles.navbar}>
       <div style={styles.navInner}>
         {/* Brand */}
-        <div style={styles.brand}>Dishecovery</div>
+        <div style={styles.brand}>Dishcovery</div>
 
         {/* Search */}
         <form style={styles.search} onSubmit={(e) => e.preventDefault()}>
@@ -27,7 +28,7 @@ export function SiteNavbar() {
           <a href="/#contact" style={styles.link}>Contact</a>
         </nav>
 
-        {/* Profile (matches reference: dark circle + orange person) */}
+        {/* Profile (dark circle + orange person) */}
         <div style={styles.profile}>
           <FaUser size={18} color="#FF9E00" />
         </div>
@@ -104,6 +105,8 @@ export default function LandingPage() {
   );
 }
 
+const baseFont = { fontFamily: "Poppins, sans-serif" };
+
 const styles = {
   /* NAVBAR */
   navbar: {
@@ -112,6 +115,7 @@ const styles = {
     background: "#fff",
     borderBottom: "1px solid #eee",
     zIndex: 100,
+    ...baseFont,
   },
   navInner: {
     display: "flex",
@@ -119,9 +123,9 @@ const styles = {
     justifyContent: "space-between",
     height: 72,
     padding: "0 60px",
-    fontFamily: "Poppins, sans-serif",
+    ...baseFont,
   },
-  brand: { fontWeight: 800, fontSize: 28, color: "#FF9E00" },
+  brand: { fontWeight: 800, fontSize: 28, color: "#FF9E00", ...baseFont },
   search: {
     display: "flex",
     alignItems: "center",
@@ -139,6 +143,7 @@ const styles = {
     background: "transparent",
     fontSize: 14,
     flex: 1,
+    ...baseFont,
   },
   links: { display: "flex", alignItems: "center", gap: "20px" },
   link: {
@@ -146,12 +151,13 @@ const styles = {
     fontSize: 16,
     fontWeight: 500,
     color: "#222",
+    ...baseFont,
   },
   profile: {
     width: 44,
     height: 44,
     borderRadius: "50%",
-    background: "#1f1f1f",     // ⬅️ dark grey circle (matches reference)
+    background: "#1f1f1f",
     display: "grid",
     placeItems: "center",
     marginLeft: 20,
@@ -166,11 +172,24 @@ const styles = {
     justifyContent: "space-between",
     padding: "60px 0 0 60px",
     flexWrap: "wrap",
+    ...baseFont,
   },
-  heroText: { flex: 1, maxWidth: 600 },
-  title: { fontSize: 70, fontWeight: 700, lineHeight: 1.2, color: "#222" },
+  heroText: { flex: 1, maxWidth: 600, ...baseFont },
+  title: {
+    fontSize: 70,
+    fontWeight: 700,
+    lineHeight: 1.2,
+    color: "#222",
+    ...baseFont,
+  },
   highlight: { color: "#FF9E00" },
-  subtitle: { marginTop: 20, fontSize: 18, color: "#555", lineHeight: 1.6 },
+  subtitle: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "#555",
+    lineHeight: 1.6,
+    ...baseFont,
+  },
   heroButtons: { marginTop: 30, display: "flex", gap: 15 },
   blackBtn: {
     background: "#000",
@@ -181,6 +200,7 @@ const styles = {
     cursor: "pointer",
     fontSize: 16,
     fontWeight: 500,
+    ...baseFont,
   },
   whiteBtn: {
     background: "#fff",
@@ -191,6 +211,7 @@ const styles = {
     cursor: "pointer",
     fontSize: 16,
     fontWeight: 500,
+    ...baseFont,
   },
   heroImage: {
     flex: 1,
@@ -206,6 +227,7 @@ const styles = {
     gap: 20,
     padding: "60px 80px",
     background: "#f5f5f5",
+    ...baseFont,
   },
   featureCard: {
     background: "#fff",
@@ -213,5 +235,6 @@ const styles = {
     padding: 20,
     boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
     textAlign: "center",
+    ...baseFont,
   },
 };
