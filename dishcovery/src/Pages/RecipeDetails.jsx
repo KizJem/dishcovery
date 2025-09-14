@@ -11,10 +11,11 @@ import {
   FaDownload,
   FaHeart,
 } from "react-icons/fa";
-import food from "../Images/food.png"; // fallback image
+import food from "../Images/food.png";
 
 const styles = {
   page: { padding: "80px 80px", fontFamily: "Poppins, sans-serif" },
+
   backBtn: {
     display: "inline-flex",
     alignItems: "center",
@@ -26,6 +27,7 @@ const styles = {
     cursor: "pointer",
     marginBottom: 16,
   },
+
   heroWrap: {
     position: "relative",
     borderRadius: 16,
@@ -70,19 +72,44 @@ const styles = {
     boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
   },
 
-  mainGrid: {
-    display: "grid",
-    gridTemplateColumns: "minmax(0,1fr) 340px",
-    gap: 24,
+  // ===== Reference-accurate: tags + download in one row =====
+  tagsRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+    margin: "8px 0 18px",
   },
-
-  pillRow: { display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 },
+  tagsWrap: {
+    display: "flex",
+    gap: 10,
+    flexWrap: "wrap",
+  },
   pill: {
     padding: "6px 12px",
     background: "#FFF3E1",
     borderRadius: 999,
     fontSize: 12,
     color: "#FF9E00",
+  },
+  dlBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 10,
+    padding: "12px 18px",
+    borderRadius: 999,
+    border: "none",
+    background: "#000",
+    color: "#fff",
+    cursor: "pointer",
+    fontWeight: 600,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.10)",
+  },
+
+  mainGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0,1fr) 340px",
+    gap: 24,
   },
 
   sectionCard: {
@@ -129,33 +156,31 @@ const styles = {
     marginTop: 2,
   },
 
-  // Sidebar: Nutrition
+  // ===== Reference-accurate Nutrition card =====
   sideCard: {
-    background: "#fff",
+    background: "#F9F9F9",
+    border: "1px solid #eee",
     borderRadius: 16,
     padding: 18,
-    boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
     position: "sticky",
     top: 90,
     alignSelf: "start",
   },
-  barRow: { display: "grid", gridTemplateColumns: "120px 1fr auto", gap: 10, alignItems: "center", margin: "6px 0" },
-  barTrack: { height: 8, borderRadius: 6, background: "#F0F0F0", overflow: "hidden" },
-  barFill: (w) => ({ width: `${w}%`, height: "100%", background: "#FF9E00" }),
+  sideTitle: { margin: "0 0 6px 0", fontSize: 20, fontWeight: 700 },
+  sideKcal: { color: "#777", fontSize: 13, marginBottom: 8 },
 
-  // Buttons
-  dlBtn: {
-    display: "inline-flex",
+  barRow: {
+    display: "grid",
+    gridTemplateColumns: "110px 1fr 48px",
+    gap: 10,
     alignItems: "center",
-    gap: 8,
-    padding: "10px 16px",
-    borderRadius: 999,
-    border: "none",
-    background: "#000",
-    color: "#fff",
-    cursor: "pointer",
-    margin: "10px 0 18px",
+    margin: "8px 0",
   },
+  barTrack: { height: 8, borderRadius: 6, background: "#EDEDED", overflow: "hidden" },
+  barFill: (w) => ({ width: `${w}%`, height: "100%", background: "#FF9E00" }),
+  barLabel: { fontSize: 13 },
+  barVal: { fontSize: 12, color: "#555", textAlign: "right" },
 
   // Skeleton
   skel: {
@@ -204,7 +229,7 @@ function useRecipeDetails(id) {
 }
 
 function formatMinutes(mins) {
-  if (!mins && mins !== 0) return "-";
+  if (!mins && mins !== 0) return "—";
   const h = Math.floor(mins / 60);
   const m = mins % 60;
   if (h && m) return `${h}h ${m}m`;
@@ -234,17 +259,12 @@ export default function RecipeDetails() {
     ];
   }, [data]);
 
-  const micronutrients = [
-    "Sugar",
-    "Sodium",
-    "Potassium",
-    "Vitamin A",
-    "Vitamin C",
-    "Iron",
-  ].map((n) => {
-    const item = get(n);
-    return { label: n, value: item ? `${Math.round(item.amount)} ${item.unit}` : "—", pct: 70 };
-  });
+  const micronutrients = ["Sugar", "Sodium", "Potassium", "Vitamin A", "Vitamin C", "Iron"].map(
+    (n) => {
+      const item = get(n);
+      return { label: n, value: item ? `${Math.round(item.amount)} ${item.unit}` : "—", pct: 70 };
+    }
+  );
 
   // instructions
   const steps =
@@ -302,7 +322,15 @@ export default function RecipeDetails() {
           <div style={styles.titleBlock}>
             <h1 style={styles.title}>
               {loading ? (
-                <span style={{ ...styles.skel, width: 240, height: 30, display: "inline-block", borderRadius: 8 }} />
+                <span
+                  style={{
+                    ...styles.skel,
+                    width: 240,
+                    height: 30,
+                    display: "inline-block",
+                    borderRadius: 8,
+                  }}
+                />
               ) : (
                 <>
                   {data?.title?.split(" ").slice(0, -1).join(" ") || "Recipe"}{" "}
@@ -313,7 +341,7 @@ export default function RecipeDetails() {
               )}
             </h1>
           </div>
-          {/* Like icon, mimic screenshot */}
+          {/* Like icon */}
           <div style={{ position: "absolute", right: 16, top: 16 }}>
             <div
               title="Add to favorites"
@@ -336,39 +364,35 @@ export default function RecipeDetails() {
         {/* META */}
         <div style={styles.metaRow}>
           <div style={styles.metaCard}>
-            <FaUtensils color="#FF9E00" />{" "}
+            <FaUtensils color="#FF9E00" />
             <div>
               <div style={{ fontSize: 12, color: "#777" }}>Cuisine</div>
               <div style={{ fontWeight: 600 }}>{data?.cuisines?.[0] || "—"}</div>
             </div>
           </div>
           <div style={styles.metaCard}>
-            <FaHatCowboy color="#FF9E00" />{" "}
+            <FaHatCowboy color="#FF9E00" />
             <div>
               <div style={{ fontSize: 12, color: "#777" }}>Servings</div>
               <div style={{ fontWeight: 600 }}>{data?.servings ?? "—"}</div>
             </div>
           </div>
           <div style={styles.metaCard}>
-            <FaClock color="#FF9E00" />{" "}
+            <FaClock color="#FF9E00" />
             <div>
               <div style={{ fontSize: 12, color: "#777" }}>Prep Time</div>
-              <div style={{ fontWeight: 600 }}>
-                {formatMinutes(data?.preparationMinutes)}
-              </div>
+              <div style={{ fontWeight: 600 }}>{formatMinutes(data?.preparationMinutes)}</div>
             </div>
           </div>
           <div style={styles.metaCard}>
-            <FaClock color="#FF9E00" />{" "}
+            <FaClock color="#FF9E00" />
             <div>
               <div style={{ fontSize: 12, color: "#777" }}>Cook Time</div>
-              <div style={{ fontWeight: 600 }}>
-                {formatMinutes(data?.cookingMinutes)}
-              </div>
+              <div style={{ fontWeight: 600 }}>{formatMinutes(data?.cookingMinutes)}</div>
             </div>
           </div>
           <div style={styles.metaCard}>
-            <FaFireAlt color="#FF9E00" />{" "}
+            <FaFireAlt color="#FF9E00" />
             <div>
               <div style={{ fontSize: 12, color: "#777" }}>Difficulty</div>
               <div style={{ fontWeight: 600 }}>
@@ -378,19 +402,24 @@ export default function RecipeDetails() {
           </div>
         </div>
 
-        {/* TAGS + DOWNLOAD */}
-        <div style={styles.pillRow}>
-          {tagList.slice(0, 12).map((t, i) => (
-            <span key={i} style={styles.pill}>{t}</span>
-          ))}
+        {/* TAGS + DOWNLOAD (reference layout) */}
+        <div style={styles.tagsRow}>
+          <div style={styles.tagsWrap}>
+            {tagList.slice(0, 12).map((t, i) => (
+              <span key={i} style={styles.pill}>
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <button
+            style={styles.dlBtn}
+            onClick={() => window.print()} // simple print-to-PDF
+            title="Download Recipe PDF"
+          >
+            <FaDownload /> Download Recipe PDF
+          </button>
         </div>
-        <button
-          style={styles.dlBtn}
-          onClick={() => window.print()} // simple print-to-PDF
-          title="Download Recipe PDF"
-        >
-          <FaDownload /> Download Recipe PDF
-        </button>
 
         {/* MAIN GRID */}
         <div style={styles.mainGrid}>
@@ -433,32 +462,32 @@ export default function RecipeDetails() {
 
           {/* SIDEBAR */}
           <aside style={styles.sideCard}>
-            <h3 style={{ ...styles.h3, marginBottom: 6 }}>Nutritional Info</h3>
-            <div style={{ color: "#777", fontSize: 13, marginBottom: 10 }}>
+            <h3 style={styles.sideTitle}>Nutritional Info</h3>
+            <div style={styles.sideKcal}>
               {calories ? `${Math.round(calories)} kcal` : "—"}
             </div>
 
             {/* Macro bars */}
             {macroBars.map((m) => (
               <div key={m.label} style={styles.barRow}>
-                <div style={{ fontSize: 13 }}>{m.label}</div>
+                <div style={styles.barLabel}>{m.label}</div>
                 <div style={styles.barTrack}>
                   <div style={styles.barFill(m.pct)} />
                 </div>
-                <div style={{ fontSize: 12, color: "#555" }}>{m.value}</div>
+                <div style={styles.barVal}>{m.value}</div>
               </div>
             ))}
 
-            <div style={{ height: 10 }} />
+            <div style={{ height: 6 }} />
 
             {/* Selected micro list */}
             {micronutrients.map((n) => (
               <div key={n.label} style={styles.barRow}>
-                <div style={{ fontSize: 13 }}>{n.label}</div>
+                <div style={styles.barLabel}>{n.label}</div>
                 <div style={styles.barTrack}>
                   <div style={styles.barFill(n.pct)} />
                 </div>
-                <div style={{ fontSize: 12, color: "#555" }}>{n.value}</div>
+                <div style={styles.barVal}>{n.value}</div>
               </div>
             ))}
 
