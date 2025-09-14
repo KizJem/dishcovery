@@ -1,7 +1,7 @@
-// src/Pages/Recipe.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Components/Navbar";
+import { SiteNavbar } from "./LandingPage";
+import Contact from "./Contact";
 import {
   FaHeart,
   FaRegHeart,
@@ -14,147 +14,7 @@ import {
   FaSeedling,
   FaAppleAlt,
 } from "react-icons/fa";
-import food from "../Images/food.png"; // fallback image
-
-const styles = {
-  container: {
-    padding: "80px 80px",
-    fontFamily: "Poppins, sans-serif",
-  },
-  heading: {
-    fontSize: "28px",
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: "20px",
-  },
-  highlight: { color: "#FF9E00" },
-
-  // FILTERS
-  categories: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "12px",
-    justifyContent: "center",
-    marginBottom: "40px",
-  },
-  categoryButton: {
-    display: "flex",
-    alignItems: "center",
-    padding: "10px 20px",
-    borderRadius: "25px",
-    border: "none",
-    background: "#f1f1f1",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "500",
-    transition: "transform 0.2s ease",
-  },
-  activeCategory: { background: "#000", color: "#fff" },
-
-  // GRID
-  recipeGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
-  },
-  card: {
-    background: "#fff",
-    borderRadius: "16px",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-    padding: "15px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    transition: "transform 0.3s ease",
-  },
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "8px",
-  },
-  heartButton: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    flexShrink: 0,
-  },
-
-  // ✅ Uniform title area (2 lines, fixed height ~44–48px)
-  titleClamp: {
-    fontSize: "16px",
-    fontWeight: 600,
-    lineHeight: "1.35",
-    margin: 0,
-    display: "-webkit-box",
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: "vertical",
-    overflow: "hidden",
-    minHeight: "44px", // keep heights aligned
-  },
-
-  // ✅ Uniform image height
-  cardImg: {
-    width: "100%",
-    height: "180px",
-    borderRadius: "12px",
-    objectFit: "cover",
-    objectPosition: "center",
-    display: "block",
-  },
-
-  // Tags
-  tags: {
-    display: "flex",
-    gap: "8px",
-    flexWrap: "wrap",
-    minHeight: "28px",
-  },
-  tag: {
-    background: "#f5f5f5",
-    padding: "4px 10px",
-    borderRadius: "12px",
-    fontSize: "12px",
-  },
-
-  seeRecipe: {
-    marginTop: "auto",
-    padding: "10px",
-    borderRadius: "25px",
-    border: "none",
-    background: "#000",
-    color: "#fff",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: "500",
-    transition: "all 0.3s ease",
-  },
-
-  // skeletons
-  skelImg: {
-    width: "100%",
-    height: "180px",
-    borderRadius: "12px",
-    background:
-      "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
-    backgroundSize: "400% 100%",
-    animation: "shimmer 1.4s ease infinite",
-  },
-};
-
-const injectKeyframes = () => {
-  const id = "shimmer-anim";
-  if (document.getElementById(id)) return;
-  const style = document.createElement("style");
-  style.id = id;
-  style.innerHTML = `
-    @keyframes shimmer {
-      0% { background-position: 100% 0; }
-      100% { background-position: 0 0; }
-    }
-  `;
-  document.head.appendChild(style);
-};
+import food from "../Images/food.png";
 
 export default function Recipe() {
   const [liked, setLiked] = useState({});
@@ -164,7 +24,15 @@ export default function Recipe() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => injectKeyframes(), []);
+  useEffect(() => {
+    const id = "shimmer-anim";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.innerHTML =
+      "@keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}";
+    document.head.appendChild(style);
+  }, []);
 
   const categories = [
     { name: "All Recipes", icon: <FaThLarge /> },
@@ -177,8 +45,7 @@ export default function Recipe() {
     { name: "Healthy", icon: <FaAppleAlt /> },
   ];
 
-  const toggleLike = (id) =>
-    setLiked((p) => ({ ...p, [id]: !p[id] }));
+  const toggleLike = (id) => setLiked((p) => ({ ...p, [id]: !p[id] }));
 
   const apiParams = useMemo(() => {
     switch (activeCategory) {
@@ -220,14 +87,10 @@ export default function Recipe() {
         base.searchParams.set("instructionsRequired", "true");
         base.searchParams.set("sort", "random");
         base.searchParams.set("imageType", "jpg");
-        if (apiParams.type)
-          base.searchParams.set("type", apiParams.type);
-        if (apiParams.diet)
-          base.searchParams.set("diet", apiParams.diet);
+        if (apiParams.type) base.searchParams.set("type", apiParams.type);
+        if (apiParams.diet) base.searchParams.set("diet", apiParams.diet);
 
-        const res = await fetch(base.toString(), {
-          signal: controller.signal,
-        });
+        const res = await fetch(base.toString(), { signal: controller.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
@@ -239,8 +102,7 @@ export default function Recipe() {
         }
         setItems(results);
       } catch (e) {
-        if (e.name !== "AbortError")
-          setError("Failed to load recipes.");
+        if (e.name !== "AbortError") setError("Failed to load recipes.");
       } finally {
         setLoading(false);
       }
@@ -264,7 +126,8 @@ export default function Recipe() {
 
   return (
     <>
-      <Navbar />
+      <SiteNavbar />
+
       <section style={styles.container}>
         <h2 style={styles.heading}>
           What to <span style={styles.highlight}>Cook?</span>
@@ -418,6 +281,114 @@ export default function Recipe() {
               })}
         </div>
       </section>
+      <Contact /> 
     </>
   );
 }
+
+const styles = {
+  container: { padding: "80px 80px", fontFamily: "Poppins, sans-serif" },
+  heading: {
+    fontSize: "28px",
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: "20px",
+  },
+  highlight: { color: "#FF9E00" },
+
+  categories: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "12px",
+    justifyContent: "center",
+    marginBottom: "40px",
+  },
+  categoryButton: {
+    display: "flex",
+    alignItems: "center",
+    padding: "10px 20px",
+    borderRadius: "25px",
+    border: "none",
+    background: "#f1f1f1",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "transform 0.2s ease",
+  },
+  activeCategory: { background: "#000", color: "#fff" },
+
+  recipeGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "20px",
+  },
+  card: {
+    background: "#fff",
+    borderRadius: "16px",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    padding: "15px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    transition: "transform 0.3s ease",
+  },
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: "8px",
+  },
+  heartButton: {
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    flexShrink: 0,
+  },
+  titleClamp: {
+    fontSize: "16px",
+    fontWeight: 600,
+    lineHeight: "1.35",
+    margin: 0,
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    minHeight: "44px",
+  },
+  cardImg: {
+    width: "100%",
+    height: "180px",
+    borderRadius: "12px",
+    objectFit: "cover",
+    objectPosition: "center",
+    display: "block",
+  },
+  tags: { display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "28px" },
+  tag: {
+    background: "#f5f5f5",
+    padding: "4px 10px",
+    borderRadius: "12px",
+    fontSize: "12px",
+  },
+  seeRecipe: {
+    marginTop: "auto",
+    padding: "10px",
+    borderRadius: "25px",
+    border: "none",
+    background: "#000",
+    color: "#fff",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: "500",
+    transition: "all 0.3s ease",
+  },
+  skelImg: {
+    width: "100%",
+    height: "180px",
+    borderRadius: "12px",
+    background:
+      "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
+    backgroundSize: "400% 100%",
+    animation: "shimmer 1.4s ease infinite",
+  },
+};

@@ -1,7 +1,7 @@
-// src/Pages/RecipeDetails.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../Components/Navbar";
+import { SiteNavbar } from "./LandingPage";
+import Contact from "./Contact";
 import {
   FaUtensils,
   FaClock,
@@ -72,7 +72,6 @@ const styles = {
     boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
   },
 
-  // ===== Reference-accurate: tags + download in one row =====
   tagsRow: {
     display: "flex",
     alignItems: "center",
@@ -80,11 +79,7 @@ const styles = {
     gap: 16,
     margin: "8px 0 18px",
   },
-  tagsWrap: {
-    display: "flex",
-    gap: 10,
-    flexWrap: "wrap",
-  },
+  tagsWrap: { display: "flex", gap: 10, flexWrap: "wrap" },
   pill: {
     padding: "6px 12px",
     background: "#FFF3E1",
@@ -120,7 +115,6 @@ const styles = {
   },
   h3: { margin: "0 0 14px 0", fontSize: 18 },
 
-  // Ingredients
   ingGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(2, minmax(0,1fr))",
@@ -134,7 +128,6 @@ const styles = {
     fontSize: 14,
   },
 
-  // Instructions
   step: {
     display: "flex",
     gap: 10,
@@ -156,7 +149,6 @@ const styles = {
     marginTop: 2,
   },
 
-  // ===== Reference-accurate Nutrition card =====
   sideCard: {
     background: "#F9F9F9",
     border: "1px solid #eee",
@@ -177,14 +169,23 @@ const styles = {
     alignItems: "center",
     margin: "8px 0",
   },
-  barTrack: { height: 8, borderRadius: 6, background: "#EDEDED", overflow: "hidden" },
-  barFill: (w) => ({ width: `${w}%`, height: "100%", background: "#FF9E00" }),
+  barTrack: {
+    height: 8,
+    borderRadius: 6,
+    background: "#EDEDED",
+    overflow: "hidden",
+  },
+  barFill: (w) => ({
+    width: `${w}%`,
+    height: "100%",
+    background: "#FF9E00",
+  }),
   barLabel: { fontSize: 13 },
   barVal: { fontSize: 12, color: "#555", textAlign: "right" },
 
-  // Skeleton
   skel: {
-    background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
+    background:
+      "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
     backgroundSize: "400% 100%",
     animation: "shimmer 1.4s ease infinite",
   },
@@ -208,7 +209,9 @@ function useRecipeDetails(id) {
       try {
         setLoading(true);
         setErr("");
-        const url = new URL(`https://api.spoonacular.com/recipes/${id}/information`);
+        const url = new URL(
+          `https://api.spoonacular.com/recipes/${id}/information`
+        );
         url.searchParams.set("apiKey", key);
         url.searchParams.set("includeNutrition", "true");
         const res = await fetch(url.toString(), { signal: controller.signal });
@@ -242,9 +245,10 @@ export default function RecipeDetails() {
   const navigate = useNavigate();
   const { data, loading, err } = useRecipeDetails(id);
 
-  // nutrition helpers
   const get = (name) =>
-    data?.nutrition?.nutrients?.find((n) => n.name?.toLowerCase() === name.toLowerCase());
+    data?.nutrition?.nutrients?.find(
+      (n) => n.name?.toLowerCase() === name.toLowerCase()
+    );
   const calories = get("Calories")?.amount ?? null;
 
   const macroBars = useMemo(() => {
@@ -259,16 +263,26 @@ export default function RecipeDetails() {
     ];
   }, [data]);
 
-  const micronutrients = ["Sugar", "Sodium", "Potassium", "Vitamin A", "Vitamin C", "Iron"].map(
-    (n) => {
-      const item = get(n);
-      return { label: n, value: item ? `${Math.round(item.amount)} ${item.unit}` : "—", pct: 70 };
-    }
-  );
+  const micronutrients = [
+    "Sugar",
+    "Sodium",
+    "Potassium",
+    "Vitamin A",
+    "Vitamin C",
+    "Iron",
+  ].map((n) => {
+    const item = get(n);
+    return {
+      label: n,
+      value: item ? `${Math.round(item.amount)} ${item.unit}` : "—",
+      pct: 70,
+    };
+    });
 
-  // instructions
   const steps =
-    data?.analyzedInstructions?.[0]?.steps?.map((s) => s.step)?.filter(Boolean) ??
+    data?.analyzedInstructions?.[0]?.steps
+      ?.map((s) => s.step)
+      ?.filter(Boolean) ??
     (data?.instructions
       ? data.instructions
           .replace(/<\/?ol>|<\/?ul>|<\/?li>/g, " ")
@@ -277,31 +291,16 @@ export default function RecipeDetails() {
           .filter(Boolean)
       : []);
 
-  // tags
   const tagList = [
     ...(data?.dishTypes || []),
     ...(data?.diets || []),
     ...(data?.cuisines || []),
   ];
 
-  // shimmer keyframes once
-  useEffect(() => {
-    const id = "shimmer-anim";
-    if (!document.getElementById(id)) {
-      const el = document.createElement("style");
-      el.id = id;
-      el.innerHTML = `
-        @keyframes shimmer {
-          0% { background-position: 100% 0; }
-          100% { background-position: 0 0; }
-        }`;
-      document.head.appendChild(el);
-    }
-  }, []);
-
   return (
     <>
-      <Navbar />
+      <SiteNavbar />
+
       <section style={styles.page}>
         <button style={styles.backBtn} onClick={() => navigate(-1)}>
           <FaChevronLeft /> Back
@@ -402,7 +401,7 @@ export default function RecipeDetails() {
           </div>
         </div>
 
-        {/* TAGS + DOWNLOAD (reference layout) */}
+        {/* TAGS + DOWNLOAD */}
         <div style={styles.tagsRow}>
           <div style={styles.tagsWrap}>
             {tagList.slice(0, 12).map((t, i) => (
@@ -414,7 +413,7 @@ export default function RecipeDetails() {
 
           <button
             style={styles.dlBtn}
-            onClick={() => window.print()} // simple print-to-PDF
+            onClick={() => window.print()}
             title="Download Recipe PDF"
           >
             <FaDownload /> Download Recipe PDF
@@ -490,13 +489,10 @@ export default function RecipeDetails() {
                 <div style={styles.barVal}>{n.value}</div>
               </div>
             ))}
-
-            {err && (
-              <div style={{ marginTop: 12, color: "#b00020", fontSize: 13 }}>{err}</div>
-            )}
           </aside>
         </div>
       </section>
+      <Contact />
     </>
   );
 }
