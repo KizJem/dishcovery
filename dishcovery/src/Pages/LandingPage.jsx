@@ -145,7 +145,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "60px 0 0 60px",
+    padding: "0 0 0 60px",
     flexWrap: "wrap",
     ...baseFont,
   },

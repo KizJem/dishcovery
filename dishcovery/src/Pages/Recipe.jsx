@@ -179,115 +179,115 @@ export default function Recipe() {
         <div style={styles.recipeGrid}>
           {loading
             ? Array.from({ length: 10 }).map((_, i) => (
-                <div key={`skel-${i}`} style={styles.card}>
-                  <div style={styles.cardHeader}>
-                    <div
-                      style={{
-                        width: 170,
-                        height: 16,
-                        background: "#eee",
-                        borderRadius: 6,
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: 18,
-                        height: 18,
-                        background: "#eee",
-                        borderRadius: "50%",
-                      }}
-                    />
-                  </div>
-                  <div style={styles.skelImg} />
-                  <div style={styles.tags}>
-                    <span style={styles.tag}> </span>
-                    <span style={styles.tag}> </span>
-                  </div>
-                  <button style={styles.seeRecipe} disabled>
-                    See Recipe →
-                  </button>
-                </div>
-              ))
-            : items.map((r) => {
-                const img = r.image || food;
-                const title = r.title || "Untitled Recipe";
-                const id = r.id;
-                const tags = buildTags(r);
-
-                return (
+              <div key={`skel-${i}`} style={styles.card}>
+                <div style={styles.cardHeader}>
                   <div
-                    key={id}
-                    style={styles.card}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform =
-                        "scale(1.05)";
-                      e.currentTarget.style.transition =
-                        "transform 0.3s ease";
+                    style={{
+                      width: 170,
+                      height: 16,
+                      background: "#eee",
+                      borderRadius: 6,
                     }}
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  >
-                    {/* Header with clamped title */}
-                    <div style={styles.cardHeader}>
-                      <h3 style={styles.titleClamp}>{title}</h3>
-                      <button
-                        onClick={() => toggleLike(id)}
-                        style={styles.heartButton}
-                        aria-label="like"
-                      >
-                        {liked[id] ? (
-                          <FaHeart color="red" size={18} />
-                        ) : (
-                          <FaRegHeart size={18} />
-                        )}
-                      </button>
-                    </div>
+                  />
+                  <span
+                    style={{
+                      width: 18,
+                      height: 18,
+                      background: "#eee",
+                      borderRadius: "50%",
+                    }}
+                  />
+                </div>
+                <div style={styles.skelImg} />
+                <div style={styles.tags}>
+                  <span style={styles.tag}> </span>
+                  <span style={styles.tag}> </span>
+                </div>
+                <button style={styles.seeRecipe} disabled>
+                  See Recipe →
+                </button>
+              </div>
+            ))
+            : items.map((r) => {
+              const img = r.image || food;
+              const title = r.title || "Untitled Recipe";
+              const id = r.id;
+              const tags = buildTags(r);
 
-                    {/* Image */}
-                    <img
-                      src={img}
-                      alt={title}
-                      style={styles.cardImg}
-                      loading="lazy"
-                    />
-
-                    {/* Tags */}
-                    <div style={styles.tags}>
-                      {tags.map((t, i) => (
-                        <span key={i} style={styles.tag}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Button */}
+              return (
+                <div
+                  key={id}
+                  style={styles.card}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform =
+                      "scale(1.05)";
+                    e.currentTarget.style.transition =
+                      "transform 0.3s ease";
+                  }}
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
+                >
+                  {/* Header with clamped title */}
+                  <div style={styles.cardHeader}>
+                    <h3 style={styles.titleClamp}>{title}</h3>
                     <button
-                      style={styles.seeRecipe}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = "#FF9E00";
-                        e.target.style.color = "#000";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = "#000";
-                        e.target.style.color = "#fff";
-                      }}
-                      onClick={() => navigate(`/recipe/${id}`)}
+                      onClick={() => toggleLike(id)}
+                      style={styles.heartButton}
+                      aria-label="like"
                     >
-                      See Recipe ➝
+                      {liked[id] ? (
+                        <FaHeart color="red" size={18} />
+                      ) : (
+                        <FaRegHeart size={18} />
+                      )}
                     </button>
                   </div>
-                );
-              })}
+
+                  {/* Image */}
+                  <img
+                    src={img}
+                    alt={title}
+                    style={styles.cardImg}
+                    loading="lazy"
+                  />
+
+                  {/* Tags */}
+                  <div style={styles.tags}>
+                    {tags.map((t, i) => (
+                      <span key={i} style={styles.tag}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Button */}
+                  <button
+                    style={styles.seeRecipe}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = "#FF9E00";
+                      e.target.style.color = "#000";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = "#000";
+                      e.target.style.color = "#fff";
+                    }}
+                    onClick={() => navigate(`/recipe/${id}`)}
+                  >
+                    See Recipe ➝
+                  </button>
+                </div>
+              );
+            })}
         </div>
       </section>
-      <Contact /> 
+      <Contact />
     </>
   );
 }
 
 const styles = {
-  container: { padding: "80px 80px", fontFamily: "Poppins, sans-serif" },
+  container: { padding: "10px 80px", fontFamily: "Poppins, sans-serif" },
   heading: {
     fontSize: "28px",
     fontWeight: "600",

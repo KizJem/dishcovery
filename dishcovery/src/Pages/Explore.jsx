@@ -88,14 +88,14 @@ export default function Explore() {
           </div>
         </section>
       </div>
-      <Contact /> 
+      <Contact />
     </>
   );
 }
 
 const styles = {
   page: {
-    padding: "40px 80px",
+    padding: "10px 80px",
     fontFamily: "'Poppins', sans-serif",
   },
   toolsSection: { marginBottom: 60, textAlign: "center" },
