@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { SiteNavbar } from "./LandingPage";
+import Navbar from "../Components/Navbar";
 import Contact from "./Contact";
 import {
   FaUtensils,
@@ -209,9 +209,7 @@ function useRecipeDetails(id) {
       try {
         setLoading(true);
         setErr("");
-        const url = new URL(
-          `https://api.spoonacular.com/recipes/${id}/information`
-        );
+        const url = new URL(`https://api.spoonacular.com/recipes/${id}/information`);
         url.searchParams.set("apiKey", key);
         url.searchParams.set("includeNutrition", "true");
         const res = await fetch(url.toString(), { signal: controller.signal });
@@ -277,7 +275,7 @@ export default function RecipeDetails() {
       value: item ? `${Math.round(item.amount)} ${item.unit}` : "—",
       pct: 70,
     };
-    });
+  });
 
   const steps =
     data?.analyzedInstructions?.[0]?.steps
@@ -299,7 +297,8 @@ export default function RecipeDetails() {
 
   return (
     <>
-      <SiteNavbar />
+      <Navbar />
+      <div className="nav-spacer" />
 
       <section style={styles.page}>
         <button style={styles.backBtn} onClick={() => navigate(-1)}>
@@ -432,7 +431,7 @@ export default function RecipeDetails() {
                 <div style={styles.ingGrid}>
                   {(data?.extendedIngredients || []).map((ing) => (
                     <div key={ing.id || ing.original} style={styles.ingItem}>
-                      {ing.original}
+                      {IngText(ing)}
                     </div>
                   ))}
                 </div>
@@ -491,8 +490,24 @@ export default function RecipeDetails() {
             ))}
           </aside>
         </div>
+
+        {err && (
+          <p style={{ color: "#b00020", marginTop: 16 }}>
+            {err}
+          </p>
+        )}
       </section>
       <Contact />
     </>
   );
+}
+
+function IngText(ing) {
+  // Some ingredients come with measures; fallback to original text
+  if (!ing) return "";
+  if (ing.original) return ing.original;
+  const amount = ing.amount ? Math.round(ing.amount * 10) / 10 : "";
+  const unit = ing.unit || "";
+  const name = ing.name || "";
+  return [amount, unit, name].filter(Boolean).join(" ");
 }

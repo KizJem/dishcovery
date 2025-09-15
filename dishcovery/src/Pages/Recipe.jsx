@@ -1,18 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SiteNavbar } from "./LandingPage";
+import Navbar from "../Components/Navbar";
 import Contact from "./Contact";
 import {
-  FaHeart,
-  FaRegHeart,
-  FaThLarge,
-  FaCarrot,
-  FaUtensils,
-  FaIceCream,
-  FaGlassMartiniAlt,
-  FaLeaf,
-  FaSeedling,
-  FaAppleAlt,
+  FaHeart, FaRegHeart, FaThLarge, FaCarrot, FaUtensils,
+  FaIceCream, FaGlassMartiniAlt, FaLeaf, FaSeedling, FaAppleAlt,
 } from "react-icons/fa";
 import food from "../Images/food.png";
 
@@ -49,20 +41,13 @@ export default function Recipe() {
 
   const apiParams = useMemo(() => {
     switch (activeCategory) {
-      case "Appetizers":
-        return { type: "appetizer" };
-      case "Main Dishes":
-        return { type: "main course" };
-      case "Desserts":
-        return { type: "dessert" };
-      case "Drinks":
-        return { type: "beverage" };
-      case "Vegetarian":
-        return { diet: "vegetarian" };
-      case "Vegan":
-        return { diet: "vegan" };
-      default:
-        return {};
+      case "Appetizers": return { type: "appetizer" };
+      case "Main Dishes": return { type: "main course" };
+      case "Desserts": return { type: "dessert" };
+      case "Drinks": return { type: "beverage" };
+      case "Vegetarian": return { diet: "vegetarian" };
+      case "Vegan": return { diet: "vegan" };
+      default: return {};
     }
   }, [activeCategory]);
 
@@ -78,9 +63,7 @@ export default function Recipe() {
       setLoading(true);
       setError("");
       try {
-        const base = new URL(
-          "https://api.spoonacular.com/recipes/complexSearch"
-        );
+        const base = new URL("https://api.spoonacular.com/recipes/complexSearch");
         base.searchParams.set("apiKey", key);
         base.searchParams.set("number", "24");
         base.searchParams.set("addRecipeInformation", "true");
@@ -96,9 +79,7 @@ export default function Recipe() {
 
         let results = data?.results ?? [];
         if (activeCategory === "Healthy") {
-          results = results.filter(
-            (r) => r.veryHealthy || r.healthScore >= 60
-          );
+          results = results.filter((r) => r.veryHealthy || r.healthScore >= 60);
         }
         setItems(results);
       } catch (e) {
@@ -116,8 +97,7 @@ export default function Recipe() {
     const tags = [];
     if (Array.isArray(r.diets)) {
       if (r.diets.includes("vegan")) tags.push("Vegan");
-      if (r.diets.some((d) => d.includes("vegetarian")))
-        tags.push("Vegetarian");
+      if (r.diets.some((d) => d.includes("vegetarian"))) tags.push("Vegetarian");
     }
     if (r.veryHealthy || r.healthScore >= 60) tags.push("Healthy");
     if (r.readyInMinutes <= 30) tags.push("Quick");
@@ -126,7 +106,8 @@ export default function Recipe() {
 
   return (
     <>
-      <SiteNavbar />
+      <Navbar />
+      <div className="nav-spacer" />
 
       <section style={styles.container}>
         <h2 style={styles.heading}>
@@ -141,22 +122,12 @@ export default function Recipe() {
               onClick={() => setActiveCategory(cat.name)}
               style={{
                 ...styles.categoryButton,
-                ...(activeCategory === cat.name
-                  ? styles.activeCategory
-                  : {}),
+                ...(activeCategory === cat.name ? styles.activeCategory : {}),
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.1)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
-              <span
-                style={{ marginRight: "8px", color: "#FF9E00" }}
-              >
-                {cat.icon}
-              </span>
+              <span style={{ marginRight: "8px", color: "#FF9E00" }}>{cat.icon}</span>
               {cat.name}
             </button>
           ))}
@@ -179,108 +150,83 @@ export default function Recipe() {
         <div style={styles.recipeGrid}>
           {loading
             ? Array.from({ length: 10 }).map((_, i) => (
-              <div key={`skel-${i}`} style={styles.card}>
-                <div style={styles.cardHeader}>
-                  <div
-                    style={{
-                      width: 170,
-                      height: 16,
-                      background: "#eee",
-                      borderRadius: 6,
-                    }}
-                  />
-                  <span
-                    style={{
-                      width: 18,
-                      height: 18,
-                      background: "#eee",
-                      borderRadius: "50%",
-                    }}
-                  />
-                </div>
-                <div style={styles.skelImg} />
-                <div style={styles.tags}>
-                  <span style={styles.tag}> </span>
-                  <span style={styles.tag}> </span>
-                </div>
-                <button style={styles.seeRecipe} disabled>
-                  See Recipe →
-                </button>
-              </div>
-            ))
-            : items.map((r) => {
-              const img = r.image || food;
-              const title = r.title || "Untitled Recipe";
-              const id = r.id;
-              const tags = buildTags(r);
-
-              return (
-                <div
-                  key={id}
-                  style={styles.card}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                      "scale(1.05)";
-                    e.currentTarget.style.transition =
-                      "transform 0.3s ease";
-                  }}
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.transform = "scale(1)")
-                  }
-                >
-                  {/* Header with clamped title */}
+                <div key={`skel-${i}`} style={styles.card}>
                   <div style={styles.cardHeader}>
-                    <h3 style={styles.titleClamp}>{title}</h3>
-                    <button
-                      onClick={() => toggleLike(id)}
-                      style={styles.heartButton}
-                      aria-label="like"
-                    >
-                      {liked[id] ? (
-                        <FaHeart color="red" size={18} />
-                      ) : (
-                        <FaRegHeart size={18} />
-                      )}
-                    </button>
+                    <div style={{ width: 170, height: 16, background: "#eee", borderRadius: 6 }} />
+                    <span style={{ width: 18, height: 18, background: "#eee", borderRadius: "50%" }} />
                   </div>
-
-                  {/* Image */}
-                  <img
-                    src={img}
-                    alt={title}
-                    style={styles.cardImg}
-                    loading="lazy"
-                  />
-
-                  {/* Tags */}
+                  <div style={styles.skelImg} />
                   <div style={styles.tags}>
-                    {tags.map((t, i) => (
-                      <span key={i} style={styles.tag}>
-                        {t}
-                      </span>
-                    ))}
+                    <span style={styles.tag}> </span>
+                    <span style={styles.tag}> </span>
                   </div>
-
-                  {/* Button */}
-                  <button
-                    style={styles.seeRecipe}
-                    onMouseEnter={(e) => {
-                      e.target.style.background = "#FF9E00";
-                      e.target.style.color = "#000";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.background = "#000";
-                      e.target.style.color = "#fff";
-                    }}
-                    onClick={() => navigate(`/recipe/${id}`)}
-                  >
-                    See Recipe ➝
+                  <button style={styles.seeRecipe} disabled>
+                    See Recipe →
                   </button>
                 </div>
-              );
-            })}
+              ))
+            : items.map((r) => {
+                const img = r.image || food;
+                const title = r.title || "Untitled Recipe";
+                const id = r.id;
+                const tags = buildTags(r);
+
+                return (
+                  <div
+                    key={id}
+                    style={styles.card}
+                    onMouseEnter={(e) => {
+                      // FIXED: removed stray ')' that caused compile errors
+                      e.currentTarget.style.transform = "scale(1.05)";
+                      e.currentTarget.style.transition = "transform 0.3s ease";
+                    }}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                  >
+                    {/* Header with clamped title */}
+                    <div style={styles.cardHeader}>
+                      <h3 style={styles.titleClamp}>{title}</h3>
+                      <button
+                        onClick={() => toggleLike(id)}
+                        style={styles.heartButton}
+                        aria-label="like"
+                      >
+                        {liked[id] ? <FaHeart color="red" size={18} /> : <FaRegHeart size={18} />}
+                      </button>
+                    </div>
+
+                    {/* Image */}
+                    <img src={img} alt={title} style={styles.cardImg} loading="lazy" />
+
+                    {/* Tags */}
+                    <div style={styles.tags}>
+                      {tags.map((t, i) => (
+                        <span key={i} style={styles.tag}>
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Button */}
+                    <button
+                      style={styles.seeRecipe}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "#FF9E00";
+                        e.target.style.color = "#000";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = "#000";
+                        e.target.style.color = "#fff";
+                      }}
+                      onClick={() => navigate(`/recipe/${id}`)}
+                    >
+                      See Recipe ➝
+                    </button>
+                  </div>
+                );
+              })}
         </div>
       </section>
+
       <Contact />
     </>
   );
@@ -288,12 +234,7 @@ export default function Recipe() {
 
 const styles = {
   container: { padding: "10px 80px", fontFamily: "Poppins, sans-serif" },
-  heading: {
-    fontSize: "28px",
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: "20px",
-  },
+  heading: { fontSize: "28px", fontWeight: "600", textAlign: "center", marginBottom: "20px" },
   highlight: { color: "#FF9E00" },
 
   categories: {
@@ -317,11 +258,7 @@ const styles = {
   },
   activeCategory: { background: "#000", color: "#fff" },
 
-  recipeGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
-  },
+  recipeGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" },
   card: {
     background: "#fff",
     borderRadius: "16px",
@@ -332,18 +269,8 @@ const styles = {
     gap: "10px",
     transition: "transform 0.3s ease",
   },
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "8px",
-  },
-  heartButton: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    flexShrink: 0,
-  },
+  cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" },
+  heartButton: { background: "none", border: "none", cursor: "pointer", flexShrink: 0 },
   titleClamp: {
     fontSize: "16px",
     fontWeight: 600,
@@ -355,21 +282,9 @@ const styles = {
     overflow: "hidden",
     minHeight: "44px",
   },
-  cardImg: {
-    width: "100%",
-    height: "180px",
-    borderRadius: "12px",
-    objectFit: "cover",
-    objectPosition: "center",
-    display: "block",
-  },
+  cardImg: { width: "100%", height: "180px", borderRadius: "12px", objectFit: "cover", objectPosition: "center", display: "block" },
   tags: { display: "flex", gap: "8px", flexWrap: "wrap", minHeight: "28px" },
-  tag: {
-    background: "#f5f5f5",
-    padding: "4px 10px",
-    borderRadius: "12px",
-    fontSize: "12px",
-  },
+  tag: { background: "#f5f5f5", padding: "4px 10px", borderRadius: "12px", fontSize: "12px" },
   seeRecipe: {
     marginTop: "auto",
     padding: "10px",
@@ -386,8 +301,7 @@ const styles = {
     width: "100%",
     height: "180px",
     borderRadius: "12px",
-    background:
-      "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
+    background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
     backgroundSize: "400% 100%",
     animation: "shimmer 1.4s ease infinite",
   },
