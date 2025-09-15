@@ -1,5 +1,5 @@
 import Navbar from "../Components/Navbar";
-import Contact from "./Contact";
+import Footer from "../Components/Footer";
 
 export default function About() {
   return (
@@ -16,7 +16,7 @@ export default function About() {
         </p>
       </div>
 
-      <Contact />
+      <Footer />
     </>
   );
 }

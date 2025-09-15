@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
-import Contact from "./Contact";
+import Footer from "../Components/Footer";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <Contact />
+      <Footer />
     </>
   );
 }
@@ -55,7 +55,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "0 0 0 60px",
+    padding: "0px 0 0 60px",
     flexWrap: "wrap",
     ...baseFont,
   },

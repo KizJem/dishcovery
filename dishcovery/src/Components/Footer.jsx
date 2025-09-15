@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { FaFacebookF, FaTwitter, FaPinterestP, FaInstagram } from "react-icons/fa";
 
-export default function Contact() {
+export default function Footer() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {

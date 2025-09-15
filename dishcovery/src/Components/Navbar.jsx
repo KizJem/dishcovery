@@ -1,7 +1,15 @@
-import { NavLink } from "react-router-dom";
-import { FiSearch } from "react-icons/fi"; // minimalist search icon
+import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { FiSearch } from "react-icons/fi";
 
 export default function Navbar() {
+  const location = useLocation();
+
+  // Scroll to top every time the route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [location.pathname]);
+
   return (
     <>
       {/* Google Font */}
@@ -35,11 +43,6 @@ export default function Navbar() {
               </NavLink>
               <NavLink to="/recipe" className={({ isActive }) => (isActive ? "active" : "")}>
                 Recipe
-              </NavLink>
-
-              {/* IMPORTANT: goes to LandingPage with #contact */}
-              <NavLink to="/#contact" className={({ isActive }) => (isActive ? "active" : "")}>
-                Contact
               </NavLink>
             </nav>
 
@@ -84,6 +87,7 @@ export default function Navbar() {
         .links { display: flex; gap: 32px; }
         .links a { text-decoration: none; color: #222; font-size: 18px; font-weight: 500; }
         .links a.active { color: #FF9E00; font-weight: 600; }
+        .links a:hover { color: #FF9E00; }
         .profile {
           width: 48px; height: 48px; border-radius: 50%; border: none;
           background-color: #222; color: #fff;

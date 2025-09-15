@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
-import Contact from "./Contact";
+import Footer from "../Components/Footer";
 import {
   FaUtensils,
   FaClock,
@@ -283,10 +283,10 @@ export default function RecipeDetails() {
       ?.filter(Boolean) ??
     (data?.instructions
       ? data.instructions
-          .replace(/<\/?ol>|<\/?ul>|<\/?li>/g, " ")
-          .split(/\d+\.\s|(?:Step\s*\d+:)/i)
-          .map((s) => s.trim())
-          .filter(Boolean)
+        .replace(/<\/?ol>|<\/?ul>|<\/?li>/g, " ")
+        .split(/\d+\.\s|(?:Step\s*\d+:)/i)
+        .map((s) => s.trim())
+        .filter(Boolean)
       : []);
 
   const tagList = [
@@ -497,7 +497,7 @@ export default function RecipeDetails() {
           </p>
         )}
       </section>
-      <Contact />
+      <Footer />
     </>
   );
 }

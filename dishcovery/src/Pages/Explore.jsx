@@ -1,11 +1,11 @@
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
-import Contact from "./Contact";
+import Footer from "../Components/Footer";
 
 export default function Explore() {
   const dishCategories = [
-    "Dinner","Vegetarian","Healthy","Instant Pot","Vegan",
-    "Seafood","Breakfast","Gluten-Free","Desserts","Quick & Easy",
+    "Dinner", "Vegetarian", "Healthy", "Instant Pot", "Vegan",
+    "Seafood", "Breakfast", "Gluten-Free", "Desserts", "Quick & Easy",
   ];
 
   return (
@@ -74,7 +74,7 @@ export default function Explore() {
         </section>
       </div>
 
-      <Contact />
+      <Footer />
     </>
   );
 }
