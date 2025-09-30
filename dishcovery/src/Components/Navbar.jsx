@@ -1,6 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { FiSearch } from "react-icons/fi";
 
 export default function Navbar() {
   const location = useLocation();
@@ -23,12 +22,6 @@ export default function Navbar() {
           {/* LEFT */}
           <div className="brand">Dishcovery</div>
 
-          {/* MIDDLE */}
-          <form className="search" onSubmit={(e) => e.preventDefault()}>
-            <FiSearch className="search-icon" />
-            <input type="text" placeholder="Search.." />
-          </form>
-
           {/* RIGHT */}
           <div className="right-section">
             <nav className="links">
@@ -40,9 +33,6 @@ export default function Navbar() {
               </NavLink>
               <NavLink to="/explore" className={({ isActive }) => (isActive ? "active" : "")}>
                 Explore
-              </NavLink>
-              <NavLink to="/recipe" className={({ isActive }) => (isActive ? "active" : "")}>
-                Recipe
               </NavLink>
             </nav>
 
@@ -73,16 +63,6 @@ export default function Navbar() {
         .brand {
           font-weight: 800; font-size: 32px; color: #FF9E00; letter-spacing: 0.3px;
         }
-        .search {
-          flex: 1; max-width: 560px; display: flex; align-items: center; height: 48px;
-          background-color: #F7F7F7; border-radius: 12px; padding: 0 16px;
-          border: 1px solid rgba(0,0,0,0.06); margin: 0 60px;
-        }
-        .search-icon { font-size: 18px; color: #6B6B6B; margin-right: 10px; }
-        .search input {
-          border: none; outline: none; background: transparent; width: 100%;
-          font-size: 16px; color: #222;
-        }
         .right-section { display: flex; align-items: center; gap: 32px; }
         .links { display: flex; gap: 32px; }
         .links a { text-decoration: none; color: #222; font-size: 18px; font-weight: 500; }
@@ -98,7 +78,6 @@ export default function Navbar() {
 
         @media (max-width: 980px) {
           .nav-inner { flex-wrap: wrap; }
-          .search { order: 3; flex: 1; margin: 12px 0; max-width: none; }
           .right-section { width: 100%; justify-content: flex-start; gap: 16px; }
           .links { flex-wrap: wrap; gap: 16px; }
         }

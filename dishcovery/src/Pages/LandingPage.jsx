@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
 import Footer from "../Components/Footer";
 
 export default function LandingPage() {
-  const navigate = useNavigate();
   const { hash } = useLocation();
 
   // Smooth scroll to footer when URL is /#contact
@@ -32,10 +31,9 @@ export default function LandingPage() {
             chef the easy way with <b>Dishcovery</b>.
           </p>
           <div style={styles.heroButtons}>
-            <button style={styles.blackBtn} onClick={() => navigate("/recipe")}>
-              Explore Recipes
-            </button>
-            <button style={styles.whiteBtn}>Get Our Mobile App ↓</button>
+            {/* Replaced old buttons with Login / Sign Up */}
+            <button style={styles.blackBtn}>Log in</button>
+            <button style={styles.whiteBtn}>Sign Up</button>
           </div>
         </div>
         <div style={styles.heroImage}>
@@ -60,20 +58,55 @@ const styles = {
     ...baseFont,
   },
   heroText: { flex: 1, maxWidth: 600, ...baseFont },
-  title: { fontSize: 70, fontWeight: 700, lineHeight: 1.2, color: "#222", ...baseFont },
+  title: {
+    fontSize: 70,
+    fontWeight: 700,
+    lineHeight: 1.2,
+    color: "#222",
+    ...baseFont,
+  },
   highlight: { color: "#FF9E00" },
-  subtitle: { marginTop: 20, fontSize: 18, color: "#555", lineHeight: 1.6, ...baseFont },
+  subtitle: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "#555",
+    lineHeight: 1.6,
+    ...baseFont,
+  },
   heroButtons: { marginTop: 30, display: "flex", gap: 15 },
   blackBtn: {
-    background: "#000", color: "#fff", border: "none",
-    padding: "12px 24px", borderRadius: 25, cursor: "pointer",
-    fontSize: 16, fontWeight: 500, ...baseFont,
+    background: "#000",
+    color: "#fff",
+    border: "none",
+    padding: "12px 24px",
+    borderRadius: 25,
+    cursor: "pointer",
+    fontSize: 16,
+    fontWeight: 500,
+    minWidth: 140, // ✅ fixed width
+    textAlign: "center",
+    ...baseFont,
   },
   whiteBtn: {
-    background: "#fff", color: "#000", border: "1px solid #ddd",
-    padding: "12px 24px", borderRadius: 25, cursor: "pointer",
-    fontSize: 16, fontWeight: 500, ...baseFont,
+    background: "#fff",
+    color: "#000",
+    border: "1px solid #ddd",
+    padding: "12px 24px",
+    borderRadius: 25,
+    cursor: "pointer",
+    fontSize: 16,
+    fontWeight: 500,
+    minWidth: 140, // ✅ same fixed width
+    textAlign: "center",
+    ...baseFont,
   },
-  heroImage: { flex: 1, display: "flex", justifyContent: "flex-end", maxWidth: 2000, paddingTop: 15 },
+
+  heroImage: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "flex-end",
+    maxWidth: 2000,
+    paddingTop: 15,
+  },
   image: { width: "100%", maxHeight: 600, objectFit: "cover" },
 };

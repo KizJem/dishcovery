@@ -3,18 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import {
-  FaUtensils,
-  FaClock,
-  FaFireAlt,
-  FaHatCowboy,
-  FaChevronLeft,
-  FaDownload,
-  FaHeart,
+  FaUtensils, FaClock, FaFireAlt, FaHatCowboy, FaChevronLeft, FaDownload,
+  FaHeart, FaRegHeart
 } from "react-icons/fa";
+
 import food from "../Images/food.png";
 
 const styles = {
-  page: { padding: "80px 80px", fontFamily: "Poppins, sans-serif" },
+  page: { padding: "20px 80px 20px", fontFamily: "Poppins, sans-serif" },
 
   backBtn: {
     display: "inline-flex",
@@ -82,10 +78,11 @@ const styles = {
   tagsWrap: { display: "flex", gap: 10, flexWrap: "wrap" },
   pill: {
     padding: "6px 12px",
-    background: "#FFF3E1",
+    background: "#FF9E00",
     borderRadius: 999,
     fontSize: 12,
-    color: "#FF9E00",
+    color: "#fff",
+    fontWeight: 500,
   },
   dlBtn: {
     display: "inline-flex",
@@ -118,31 +115,30 @@ const styles = {
   ingGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(2, minmax(0,1fr))",
-    gap: 8,
   },
   ingItem: {
     padding: "8px 10px",
-    borderRadius: 10,
-    background: "#FAFAFA",
-    border: "1px solid #F0F0F0",
     fontSize: 14,
   },
 
   step: {
     display: "flex",
     gap: 10,
-    padding: "10px 12px",
+    padding: "12px 16px",
     borderRadius: 12,
     background: "#FAFAFA",
     border: "1px solid #EFEFEF",
-    alignItems: "flex-start",
+    alignItems: "center",
+    maxWidth: "900px",
+    margin: "0 0",
+    textAlign: "left",
   },
   stepNum: {
     minWidth: 28,
     height: 28,
-    borderRadius: 8,
-    background: "#FF9E00",
-    color: "#000",
+    borderRadius: "50%",
+    background: "#fff",
+    color: "#FF9E00",
     fontWeight: 700,
     display: "grid",
     placeItems: "center",
@@ -242,6 +238,8 @@ export default function RecipeDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, loading, err } = useRecipeDetails(id);
+
+  const [liked, setLiked] = useState(false);
 
   const get = (name) =>
     data?.nutrition?.nutrients?.find(
@@ -343,18 +341,14 @@ export default function RecipeDetails() {
           <div style={{ position: "absolute", right: 16, top: 16 }}>
             <div
               title="Add to favorites"
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                background: "#fff",
-                display: "grid",
-                placeItems: "center",
-                boxShadow: "0 2px 6px rgba(0,0,0,.15)",
-                cursor: "pointer",
-              }}
+              onClick={() => setLiked(!liked)}
+              style={{ cursor: "pointer", transition: "transform .15s ease", padding: 6 }}
             >
-              <FaHeart color="#FF9E00" />
+              {liked ? (
+                <FaHeart color="red" size={28} />
+              ) : (
+                <FaRegHeart color="#fff" size={28} style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,.4))" }} />
+              )}
             </div>
           </div>
         </div>
@@ -448,7 +442,7 @@ export default function RecipeDetails() {
                   {steps.map((s, i) => (
                     <div key={i} style={styles.step}>
                       <div style={styles.stepNum}>{i + 1}</div>
-                      <div style={{ fontSize: 14, lineHeight: 1.5 }}>{s}</div>
+                      <div style={{ flex: 1, fontSize: 14, lineHeight: 1.6 }}>{s}</div>
                     </div>
                   ))}
                 </div>
