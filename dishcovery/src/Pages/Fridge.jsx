@@ -13,14 +13,6 @@ export default function Fridge() {
 
   const navigate = useNavigate();
 
-    const ingredientImg = (name) =>
-    `https://spoonacular.com/cdn/ingredients_100x100/${encodeURIComponent(name)}.jpg`;
-
-    const onImgError = (e) => {
-    e.currentTarget.onerror = null; // prevent loop
-    e.currentTarget.src = food;     // fallback image
-    };
-
   // Add ingredient (Enter key or Add button)
   const addIngredient = () => {
     const v = input.trim().toLowerCase();
@@ -47,21 +39,21 @@ export default function Fridge() {
   }, [ingredients]);
 
   // Fetch recipes whenever ingredients change
-    useEffect(() => {
+  useEffect(() => {
     if (!apiParams) return; // nothing to search yet
 
     const key = import.meta.env.VITE_SPOONACULAR_KEY;
     if (!key) {
-        setError("Missing Spoonacular API key in .env.local");
-        return;
+      setError("Missing Spoonacular API key in .env.local");
+      return;
     }
 
     const controller = new AbortController();
 
     const run = async () => {
-        setLoading(true);
-        setError("");
-        try {
+      setLoading(true);
+      setError("");
+      try {
         // 1) Find recipes by ingredients (best match uses most of them)
         const byIng = new URL("https://api.spoonacular.com/recipes/findByIngredients");
         byIng.searchParams.set("apiKey", key);
@@ -75,9 +67,9 @@ export default function Fridge() {
         const list = await r1.json(); // [{id,title,image,...}]
         const ids = (list || []).map((x) => x.id).join(",");
         if (!ids) {
-            setItems([]);
-            setLoading(false);
-            return;
+          setItems([]);
+          setLoading(false);
+          return;
         }
 
         // 2) Enrich with full info for tags, time, diets, etc.
@@ -90,16 +82,16 @@ export default function Fridge() {
         const detailed = await r2.json(); // array of recipes with diets, healthScore, readyInMinutes, image, title
 
         setItems(Array.isArray(detailed) ? detailed : []);
-        } catch (e) {
+      } catch (e) {
         if (e.name !== "AbortError") setError("Failed to load recipes.");
-        } finally {
+      } finally {
         setLoading(false);
-        }
+      }
     };
 
     run();
     return () => controller.abort();
-    }, [apiParams]);
+  }, [apiParams]);
 
   // Simple helper for recipe tags
   const tagsOf = (r) => {
@@ -141,28 +133,26 @@ export default function Fridge() {
           </button>
         </div>
 
-        {/* Ingredients Grid */}
+        {/* Ingredients Pills */}
         <div style={styles.ingredientsGrid}>
           {ingredients.map((item) => (
-            <div key={item} style={styles.ingCard}>
-                <img
-                src={ingredientImg(item)}
-                alt={item}
-                style={styles.ingImg}
-                onError={onImgError}
-                />
-                <div style={styles.ingLabelRow}>
-                <span style={styles.ingText}>{item}</span>
-                <button
-                    onClick={() => removeIngredient(item)}
-                    aria-label={`Remove ${item}`}
-                    style={styles.removePill}
-                >
-                    ×
-                </button>
-                </div>
+            <div
+              key={item}
+              style={styles.ingPill}
+              title={item}
+            >
+              <span style={styles.ingName}>{item}</span>
+              <button
+                onClick={() => removeIngredient(item)}
+                aria-label={`Remove ${item}`}
+                style={styles.ingClose}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                ×
+              </button>
             </div>
-            ))}
+          ))}
         </div>
 
         {/* Results / Errors */}
@@ -253,38 +243,46 @@ const styles = {
   },
   clearBtn: { padding: "10px 16px", borderRadius: 999, border: "none", background: "#eee", cursor: "pointer" },
 
+  // ===== New pill layout =====
   ingredientsGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
-    gap: 16,
+    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+    gap: 14,
     marginBottom: 24,
   },
-  ingCard: {
-    background: "#fff",
-    borderRadius: 12,
-    overflow: "hidden",
-    textAlign: "center",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-  },
-  ingImg: { width: "100%", height: 100, objectFit: "cover" },
-  ingLabelRow: {
+  ingPill: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    background: "linear-gradient(#FFA726,#FF9E00)",
-    padding: "6px 10px",
-  },
-  ingText: { fontWeight: 600, fontSize: 14, color: "#000", textTransform: "capitalize" },
-  removePill: {
-    background: "#000",
+    padding: "10px 14px",
+    borderRadius: 16,
+    background: "#FF9E00",
     color: "#fff",
-    border: "none",
-    width: 22,
-    height: 22,
-    borderRadius: 999,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
+  },
+  ingName: {
+    fontWeight: 600,
+    fontSize: 14,
+    textTransform: "capitalize",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    paddingRight: 8,
+  },
+  ingClose: {
+    background: "transparent",
+    color: "#fff",
+    border: "2px solid #fff",
+    width: 28,
+    height: 28,
+    borderRadius: "50%",
     cursor: "pointer",
-    lineHeight: "22px",
+    lineHeight: "24px",
     fontSize: 16,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
   },
 
   resultsHeader: {
