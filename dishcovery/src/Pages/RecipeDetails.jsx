@@ -497,7 +497,6 @@ export default function RecipeDetails() {
 }
 
 function IngText(ing) {
-  // Some ingredients come with measures; fallback to original text
   if (!ing) return "";
   if (ing.original) return ing.original;
   const amount = ing.amount ? Math.round(ing.amount * 10) / 10 : "";

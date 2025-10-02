@@ -1,4 +1,3 @@
-// src/Pages/Contact.jsx
 import { useState, useEffect } from "react";
 import { FaFacebookF, FaTwitter, FaPinterestP, FaInstagram } from "react-icons/fa";
 
@@ -6,7 +5,6 @@ export default function Footer() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // ensure CSS smooth scroll (for anchor jumps as a fallback)
     const id = "smooth-scroll-style";
     if (!document.getElementById(id)) {
       const style = document.createElement("style");
@@ -34,7 +32,6 @@ export default function Footer() {
   };
 
   return (
-    // anchor target for smooth scroll
     <footer id="contact-footer" style={styles.wrap}>
       <div style={styles.grid}>
         {/* Brand & blurb */}

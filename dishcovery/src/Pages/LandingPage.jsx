@@ -7,7 +7,6 @@ import Footer from "../Components/Footer";
 export default function LandingPage() {
   const { hash } = useLocation();
 
-  // Smooth scroll to footer when URL is /#contact
   useEffect(() => {
     if (hash === "#contact") {
       const el = document.getElementById("contact-footer");
@@ -31,7 +30,7 @@ export default function LandingPage() {
             chef the easy way with <b>Dishcovery</b>.
           </p>
           <div style={styles.heroButtons}>
-            {/* Replaced old buttons with Login / Sign Up */}
+            {/* Login / Sign Up */}
             <button style={styles.blackBtn}>Log in</button>
             <button style={styles.whiteBtn}>Sign Up</button>
           </div>
@@ -83,7 +82,7 @@ const styles = {
     cursor: "pointer",
     fontSize: 16,
     fontWeight: 500,
-    minWidth: 140, // ✅ fixed width
+    minWidth: 140,
     textAlign: "center",
     ...baseFont,
   },
@@ -96,7 +95,7 @@ const styles = {
     cursor: "pointer",
     fontSize: 16,
     fontWeight: 500,
-    minWidth: 140, // ✅ same fixed width
+    minWidth: 140,
     textAlign: "center",
     ...baseFont,
   },

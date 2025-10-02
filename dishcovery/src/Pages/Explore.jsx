@@ -146,7 +146,7 @@ export default function Explore() {
       <div className="nav-spacer" />
 
       <div style={styles.page}>
-        {/* ===== What to Cook? ===== */}
+        {/* What to Cook? */}
         <section style={styles.recipeContainer}>
           <h2 style={styles.heading}>
             What to <span style={styles.highlight}>Cook?</span>

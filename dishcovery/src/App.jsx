@@ -15,7 +15,6 @@ export default function App() {
       <Route path="/fridge" element={<Fridge />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Footer />} />
-      {/* fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

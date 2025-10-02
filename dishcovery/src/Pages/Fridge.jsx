@@ -13,7 +13,7 @@ export default function Fridge() {
 
   const navigate = useNavigate();
 
-  // Add ingredient (Enter key or Add button)
+  // Add ingredients
   const addIngredient = () => {
     const v = input.trim().toLowerCase();
     if (!v) return;
@@ -40,7 +40,7 @@ export default function Fridge() {
 
   // Fetch recipes whenever ingredients change
   useEffect(() => {
-    if (!apiParams) return; // nothing to search yet
+    if (!apiParams) return;
 
     const key = import.meta.env.VITE_SPOONACULAR_KEY;
     if (!key) {
@@ -243,7 +243,7 @@ const styles = {
   },
   clearBtn: { padding: "10px 16px", borderRadius: 999, border: "none", background: "#eee", cursor: "pointer" },
 
-  // ===== New pill layout =====
+  // New pill layout 
   ingredientsGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
