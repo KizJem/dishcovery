@@ -1,3 +1,4 @@
+// src/Pages/Explore.jsx
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
@@ -20,6 +21,7 @@ export default function Explore() {
 
   const navigate = useNavigate();
 
+  // one-time keyframes injection for skeleton shimmer
   useEffect(() => {
     const id = "shimmer-anim";
     if (document.getElementById(id)) return;
@@ -78,7 +80,6 @@ export default function Explore() {
         base.searchParams.set("imageType", "jpg");
 
         if (!submittedQuery.trim()) base.searchParams.set("sort", "random");
-
         if (apiParams.type) base.searchParams.set("type", apiParams.type);
         if (apiParams.diet) base.searchParams.set("diet", apiParams.diet);
         if (submittedQuery.trim()) base.searchParams.set("query", submittedQuery.trim());
@@ -245,6 +246,7 @@ export default function Explore() {
                         </button>
                       </div>
 
+                      {/* FIXED-HEIGHT IMAGE = ALIGNED ROWS */}
                       <img src={img} alt={title} style={styles.cardImg} loading="lazy" />
 
                       <div style={styles.tags}>
@@ -307,27 +309,85 @@ const styles = {
   },
   activeCategory: { background: "#000", color: "#fff" },
 
-  recipeGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 },
+  // Uniform grid; cards start from top
+  recipeGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: 20,
+    alignItems: "start",
+  },
+
+  // Card uses flex column so the button can stick to the bottom via marginTop:auto
   card: {
-    background: "#fff", borderRadius: 16, boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-    padding: 15, display: "flex", flexDirection: "column", gap: 10, transition: "transform 0.3s ease",
+    background: "#fff",
+    borderRadius: 16,
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    padding: 15,
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+    transition: "transform 0.3s ease",
   },
-  cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 },
+
+  // 🔒 FIX: Reserve equal space for titles so images align
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    gap: 8,
+    minHeight: 48, // consistent header height (2 lines of title + heart)
+  },
   heartButton: { background: "none", border: "none", cursor: "pointer", flexShrink: 0 },
+
+  // 2-line clamp and equal block height
   titleClamp: {
-    fontSize: 16, fontWeight: 600, lineHeight: "1.35", margin: 0,
-    display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", minHeight: 44,
+    fontSize: 16,
+    fontWeight: 600,
+    lineHeight: "1.35",
+    margin: 0,
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    minHeight: 44, // equal title area for all cards
   },
-  cardImg: { width: "100%", height: 180, borderRadius: 12, objectFit: "cover", objectPosition: "center", display: "block" },
+
+  // 🔒 FIX: Fixed image height so all pictures line up perfectly
+  cardImg: {
+    width: "100%",
+    height: 180,          // <- adjust if you want taller/shorter
+    flexShrink: 0,
+    borderRadius: 12,
+    objectFit: "cover",
+    objectPosition: "center",
+    display: "block",
+  },
+
+  // keep tags block consistent too
   tags: { display: "flex", gap: 8, flexWrap: "wrap", minHeight: 28 },
   tag: { background: "#f5f5f5", padding: "4px 10px", borderRadius: 12, fontSize: 12 },
+
+  // push to bottom so card heights feel consistent
   seeRecipe: {
-    marginTop: "auto", padding: 10, borderRadius: 25, border: "none",
-    background: "#000", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 500, transition: "all 0.3s ease",
+    marginTop: "auto",
+    padding: 10,
+    borderRadius: 25,
+    border: "none",
+    background: "#000",
+    color: "#fff",
+    cursor: "pointer",
+    fontSize: 14,
+    fontWeight: 500,
+    transition: "all 0.3s ease",
   },
+
+  // skeleton image (same fixed height as real image)
   skelImg: {
-    width: "100%", height: 180, borderRadius: 12,
+    width: "100%",
+    height: 180,
+    borderRadius: 12,
     background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
-    backgroundSize: "400% 100%", animation: "shimmer 1.4s ease infinite",
+    backgroundSize: "400% 100%",
+    animation: "shimmer 1.4s ease infinite",
   },
 };
