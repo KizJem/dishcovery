@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
 import Footer from "../Components/Footer";
+import { signInWithGoogle } from "../firebase";
 
 export default function LandingPage() {
   const { hash } = useLocation();
@@ -13,6 +14,11 @@ export default function LandingPage() {
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [hash]);
+
+  // 🟢 Handle Google Sign Up
+  const handleGoogleSignup = async () => {
+    await signInWithGoogle();
+  };
 
   return (
     <>
@@ -30,9 +36,11 @@ export default function LandingPage() {
             chef the easy way with <b>Dishcovery</b>.
           </p>
           <div style={styles.heroButtons}>
-            {/* Login / Sign Up */}
             <button style={styles.blackBtn}>Log in</button>
-            <button style={styles.whiteBtn}>Sign Up</button>
+            {/* 🟢 Updated Sign Up Button */}
+            <button style={styles.whiteBtn} onClick={handleGoogleSignup}>
+              Sign Up with Google
+            </button>
           </div>
         </div>
         <div style={styles.heroImage}>
@@ -99,7 +107,6 @@ const styles = {
     textAlign: "center",
     ...baseFont,
   },
-
   heroImage: {
     flex: 1,
     display: "flex",
