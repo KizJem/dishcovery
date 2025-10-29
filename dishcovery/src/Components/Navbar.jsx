@@ -54,8 +54,8 @@ export default function Navbar() {
               <button
                 className="profile"
                 aria-label="Profile"
-                onClick={() => setOpen((s) => !s)}
-                title={user ? user.displayName || "user 01" : "Profile"}
+                onClick={() => user && setOpen((s) => !s)}
+                title={user ? user.displayName || "Profile" : "Sign in required"}
               >
                 {user?.photoURL ? (
                   <img
@@ -73,7 +73,7 @@ export default function Navbar() {
                 )}
               </button>
 
-              {open && (
+              {user && open && (
                 <div className="profile-dropdown" onMouseLeave={() => setOpen(false)}>
                   <button
                     className="dropdown-item"
@@ -82,7 +82,7 @@ export default function Navbar() {
                       navigate("/profile");
                     }}
                   >
-                    {user?.displayName || "user 01"}
+                    {user.displayName || "Profile"}
                   </button>
                   <button
                     className="dropdown-item"
