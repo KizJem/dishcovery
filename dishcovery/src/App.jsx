@@ -5,6 +5,7 @@ import About from "./Pages/About";
 import RecipeDetails from "./Pages/RecipeDetails";
 import Footer from "./Components/Footer";
 import Fridge from "./Pages/Fridge";
+import Profile from "./Pages/Profile";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Route path="/explore" element={<Explore />} />
       <Route path="/fridge" element={<Fridge />} />
       <Route path="/about" element={<About />} />
+  <Route path="/profile" element={<Profile />} />
       <Route path="/contact" element={<Footer />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

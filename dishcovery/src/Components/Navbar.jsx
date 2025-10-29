@@ -1,12 +1,25 @@
-import { NavLink, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { signOutUser } from "../firebase";
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsub();
+  }, []);
 
   return (
     <>
@@ -37,14 +50,53 @@ export default function Navbar() {
               </NavLink>
             </nav>
 
-            <button className="profile" aria-label="Profile">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 12a5 5 0 1 0-0.001-10.001A5 5 0 0 0 12 12Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z"
-                  fill="#FF9E00"
-                />
-              </svg>
-            </button>
+            <div style={{ position: "relative" }}>
+              <button
+                className="profile"
+                aria-label="Profile"
+                onClick={() => setOpen((s) => !s)}
+                title={user ? user.displayName || "user 01" : "Profile"}
+              >
+                {user?.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt="avatar"
+                    style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 12a5 5 0 1 0-0.001-10.001A5 5 0 0 0 12 12Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z"
+                      fill="#FF9E00"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              {open && (
+                <div className="profile-dropdown" onMouseLeave={() => setOpen(false)}>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setOpen(false);
+                      navigate("/profile");
+                    }}
+                  >
+                    {user?.displayName || "user 01"}
+                  </button>
+                  <button
+                    className="dropdown-item"
+                    onClick={async () => {
+                      setOpen(false);
+                      await signOutUser();
+                      navigate("/");
+                    }}
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -61,6 +113,10 @@ export default function Navbar() {
         .links a.active { color:#FF9E00; font-weight:600; }
         .links a:hover { color:#FF9E00; }
         .profile { width:48px; height:48px; border-radius:50%; border:none; background:#222; color:#fff; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+  .profile img { display:block; }
+  .profile-dropdown { position:absolute; right:0; top:58px; background:#fff; border:1px solid #eee; box-shadow:0 6px 18px rgba(0,0,0,0.08); border-radius:8px; overflow:hidden; min-width:160px; z-index:1200; }
+  .dropdown-item { display:block; width:100%; padding:10px 14px; text-align:left; background:transparent; border:none; cursor:pointer; font-weight:500; color:#222; }
+  .dropdown-item:hover { background:#f7f7f7; }
         .nav-spacer { height:84px; }
 
         @media (max-width: 980px) {

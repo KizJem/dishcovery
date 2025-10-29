@@ -3,7 +3,9 @@ import { useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import food from "../Images/food.png";
 import Footer from "../Components/Footer";
-import { signInWithGoogle } from "../firebase";
+import { signInWithGoogle, auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useState } from "react";
 
 export default function LandingPage() {
   const { hash } = useLocation();
@@ -19,6 +21,12 @@ export default function LandingPage() {
   const handleGoogleSignup = async () => {
     await signInWithGoogle();
   };
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    return () => unsub();
+  }, []);
 
   return (
     <>
@@ -36,11 +44,17 @@ export default function LandingPage() {
             chef the easy way with <b>Dishcovery</b>.
           </p>
           <div style={styles.heroButtons}>
-            <button style={styles.blackBtn}>Log in</button>
-            {/* 🟢 Updated Sign Up Button */}
-            <button style={styles.whiteBtn} onClick={handleGoogleSignup}>
-              Sign Up with Google
-            </button>
+            {!user && (
+              <>
+                <button style={styles.blackBtn} onClick={handleGoogleSignup}>
+                  Log in
+                </button>
+                {/* 🟢 Updated Sign Up Button */}
+                <button style={styles.whiteBtn} onClick={handleGoogleSignup}>
+                  Sign Up with Google
+                </button>
+              </>
+            )}
           </div>
         </div>
         <div style={styles.heroImage}>

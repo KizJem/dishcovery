@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDjodj_crU80p1iAEvcfrAAZm3N9AspnV0",
@@ -29,5 +29,17 @@ export const signInWithGoogle = async () => {
   } catch (error) {
     console.error("❌ Google Sign-In Error:", error);
     alert("Google sign-in failed. Try again.");
+  }
+};
+
+// Sign out helper
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+    console.log("✅ User signed out");
+    alert("You have been signed out.");
+  } catch (error) {
+    console.error("❌ Sign out error:", error);
+    alert("Error signing out. Try again.");
   }
 };
