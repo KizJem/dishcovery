@@ -17,8 +17,8 @@ export default function LandingPage() {
     }
   }, [hash]);
 
-  // 🟢 Handle Google Sign Up
-  const handleGoogleSignup = async () => {
+  // 🟢 Handle Google Sign In
+  const handleGoogleSignIn = async () => {
     await signInWithGoogle();
   };
 
@@ -45,15 +45,9 @@ export default function LandingPage() {
           </p>
           <div style={styles.heroButtons}>
             {!user && (
-              <>
-                <button style={styles.blackBtn} onClick={handleGoogleSignup}>
-                  Log in
-                </button>
-                {/* 🟢 Updated Sign Up Button */}
-                <button style={styles.whiteBtn} onClick={handleGoogleSignup}>
-                  Sign Up with Google
-                </button>
-              </>
+              <button style={styles.blackBtn} onClick={handleGoogleSignIn}>
+                Sign In with Google
+              </button>
             )}
           </div>
         </div>

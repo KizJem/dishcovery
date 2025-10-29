@@ -24,11 +24,9 @@ export const signInWithGoogle = async () => {
     // Get user info
     const user = result.user;
     console.log("✅ Google Sign-In Success:", user);
-    alert(`Welcome, ${user.displayName}!`);
     return user;
   } catch (error) {
     console.error("❌ Google Sign-In Error:", error);
-    alert("Google sign-in failed. Try again.");
   }
 };
 
@@ -37,9 +35,7 @@ export const signOutUser = async () => {
   try {
     await signOut(auth);
     console.log("✅ User signed out");
-    alert("You have been signed out.");
   } catch (error) {
     console.error("❌ Sign out error:", error);
-    alert("Error signing out. Try again.");
   }
 };
