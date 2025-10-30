@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   FaHeart, FaRegHeart, FaThLarge, FaCarrot, FaUtensils,
   FaIceCream, FaGlassMartiniAlt, FaLeaf, FaSeedling, FaAppleAlt,
@@ -11,6 +13,7 @@ import food from "../Images/food.png";
 
 export default function Explore() {
   const [liked, setLiked] = useState({});
+  const [favorites, setFavorites] = useState({});
   const [activeCategory, setActiveCategory] = useState("All Recipes");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +46,60 @@ export default function Explore() {
   ];
 
   const toggleLike = (id) => setLiked((p) => ({ ...p, [id]: !p[id] }));
+
+  // Persist favorite recipes to localStorage per-user (or guest)
+  const storageKey = (userId) => `dishcovery_favorites_${userId || "guest"}`;
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    return () => unsub();
+  }, []);
+
+  // Load favorites for current user from localStorage
+  useEffect(() => {
+    const key = storageKey(user?.uid);
+    try {
+      const raw = localStorage.getItem(key);
+      const parsed = raw ? JSON.parse(raw) : {};
+      setFavorites(parsed || {});
+      // set liked map from favorites
+      const likedMap = Object.keys(parsed || {}).reduce((acc, id) => ({ ...acc, [id]: true }), {});
+      setLiked(likedMap);
+    } catch (e) {
+      console.error("Failed to load favorites", e);
+    }
+  }, [user]);
+
+  // Toggle and persist favorite
+  const handleToggleFavorite = (recipe) => {
+    const id = String(recipe.id);
+    const key = storageKey(user?.uid);
+    setFavorites((prev) => {
+      const next = { ...(prev || {}) };
+      if (next[id]) {
+        delete next[id];
+      } else {
+        // store minimal data needed for profile view
+        next[id] = {
+          id: recipe.id,
+          title: recipe.title,
+          image: recipe.image || food,
+          tags: buildTags(recipe),
+          addedAt: Date.now(),
+        };
+      }
+      try {
+        localStorage.setItem(key, JSON.stringify(next));
+      } catch (e) {
+        console.error("Failed to save favorites", e);
+      }
+      // keep liked state in sync
+      setLiked((p) => ({ ...p, [id]: !!next[id] }));
+      return next;
+    });
+  };
 
   const apiParams = useMemo(() => {
     switch (activeCategory) {
@@ -238,7 +295,7 @@ export default function Explore() {
                       <div style={styles.cardHeader}>
                         <h3 style={styles.titleClamp}>{title}</h3>
                         <button
-                          onClick={() => toggleLike(id)}
+                          onClick={() => handleToggleFavorite(r)}
                           style={styles.heartButton}
                           aria-label="like"
                         >
