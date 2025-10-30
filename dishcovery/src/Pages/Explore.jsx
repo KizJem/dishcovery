@@ -14,6 +14,8 @@ import food from "../Images/food.png";
 export default function Explore() {
   const [liked, setLiked] = useState({});
   const [favorites, setFavorites] = useState({});
+  const [showSignInModal, setShowSignInModal] = useState(false);
+  const [pendingRecipe, setPendingRecipe] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All Recipes");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,6 +76,12 @@ export default function Explore() {
 
   // Toggle and persist favorite
   const handleToggleFavorite = (recipe) => {
+    // If user isn't signed in, ask them to sign in first
+    if (!user) {
+      setPendingRecipe(recipe);
+      setShowSignInModal(true);
+      return;
+    }
     const id = String(recipe.id);
     const key = storageKey(user?.uid);
     setFavorites((prev) => {
@@ -327,7 +335,31 @@ export default function Explore() {
         </section>
       </div>
 
-      <Footer />
+        {/* Sign-in required modal for unauthenticated favorites */}
+        {showSignInModal && (
+          <div style={styles.modalOverlay} role="dialog" aria-modal="true">
+            <div style={styles.modalBox}>
+              <h2 style={{ marginTop: 0 }}>Sign In Required</h2>
+              <p style={{ color: "#444" }}>You need to sign in to your account before you can add this to your favorites.</p>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 18 }}>
+                <button
+                  onClick={() => { setShowSignInModal(false); setPendingRecipe(null); }}
+                  style={styles.modalCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => { setShowSignInModal(false); setPendingRecipe(null); navigate('/'); }}
+                  style={styles.modalConfirm}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <Footer />
     </>
   );
 }
@@ -446,5 +478,37 @@ const styles = {
     background: "linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%)",
     backgroundSize: "400% 100%",
     animation: "shimmer 1.4s ease infinite",
+  },
+  modalOverlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.55)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2000,
+  },
+  modalBox: {
+    width: "min(520px, 92%)",
+    maxWidth: 520,
+    background: "#fff",
+    borderRadius: 12,
+    padding: 20,
+    boxShadow: "0 12px 40px rgba(0,0,0,0.25)",
+  },
+  modalCancel: {
+    padding: "10px 20px",
+    borderRadius: 999,
+    border: "1px solid #ddd",
+    background: "#fff",
+    cursor: "pointer",
+  },
+  modalConfirm: {
+    padding: "10px 20px",
+    borderRadius: 999,
+    border: "none",
+    background: "#FF9E00",
+    color: "#fff",
+    cursor: "pointer",
   },
 };
